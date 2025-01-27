@@ -1,36 +1,57 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Accella
+description: Accella is a full-stack web framework designed to achieve high development efficiency with rich features and strong type safety.
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: Full-stack web framework designed to achieve high development efficiency with rich features and strong type safety. It is particularly suitable for startups and small teams.
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/image.jpg
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Get Started
+      link: https://github.com/koyopro/accella/blob/main/packages/accella/README.md
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Icon, Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## Installation
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+```bash
+npm create accella@latest
+```
+
+## Features
+
+<Card title="Server-First" icon="seti:csv">
+  Accella follows the tradition of full-stack MVC frameworks. Based on Astro, it returns pre-rendered HTML to the client from the server. By keeping the architecture simple, it enhances both development efficiency and user experience.
+</Card>
+<Card title="ORM Integration" icon="seti:db">
+  Accella utilizes Accel Record, an ORM implemented with the Active Record pattern. This integration enhances development efficiency, particularly for database CRUD operations.
+</Card>
+<Card title="Type Safety" icon="seti:tsconfig">
+  Accella provides a type-safe development environment with TypeScript, covering everything from table operations to template rendering.
+</Card>
+
+## How to Achieve High Development Efficiency
+
+- Full-Stack
+  - Common tasks can be accomplished with minimal code by leveraging the framework's features, allowing you to focus on custom implementations.
+  - Includes CRUD operations, validation, session management, password authentication, advanced search, form building, request parameter parsing, pagination, i18n, and security.
+  - No need to spend time selecting libraries at the start of the project.
+- Rapid feedback through type checking
+  - TypeScript's type safety ensures high efficiency in debugging and refactoring.
+  - In addition to database interactions, it offers type-safe template rendering using Astro components, which is unique compared to other server-side frameworks.
+- Simple Architecture
+  - Focuses on backend development, avoiding the need to develop server-side APIs and frontend applications separately like in SPAs.
+  - No need to set up a separate server for SSR; keeps the infrastructure architecture simple.
+- Integration with Frontend Frameworks
+  - Returns pre-rendered HTML to the browser by default, but can flexibly integrate with frontend frameworks (React, Vue, Svelte, etc.) using Astro's features.
+
+## Technologies
+
+- [Astro](https://astro.build/)
+  - Forms the base of the framework, handling routing and rendering.
+- [Accel Record](https://github.com/koyopro/accella/blob/main/packages/accel-record/README.md)
+  - Advanced ORM adopting the Active Record pattern.
+- [Prisma](https://www.prisma.io/)
+  - Handles table definitions and migrations.
