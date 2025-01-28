@@ -11,19 +11,18 @@ export default defineConfig({
         github: "https://github.com/koyopro/accella",
       },
       customCss: ["./src/styles/custom.css"],
-      // sidebar: [
-      // 	{
-      // 		label: 'Guides',
-      // 		items: [
-      // 			// Each item here is one entry in the navigation menu.
-      // 			{ label: 'Example Guide', slug: 'guides/example' },
-      // 		],
-      // 	},
-      // 	{
-      // 		label: 'Reference',
-      // 		autogenerate: { directory: 'reference' },
-      // 	},
-      // ],
+      sidebar: [
+      	{
+      		label: 'Start a new project',
+      		items: [
+      			{ label: 'Installation', slug: 'guides/installation' },
+      		],
+      	},
+      	// {
+      	// 	label: 'Reference',
+      	// 	autogenerate: { directory: 'reference' },
+      	// },
+      ],
     }),
   ],
 });
