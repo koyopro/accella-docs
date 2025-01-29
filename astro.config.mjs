@@ -15,7 +15,8 @@ export default defineConfig({
       	{
       		label: 'Start a new project',
       		items: [
-      			{ label: 'Installation', slug: 'guides/installation' },
+            'guides/installation',
+            'guides/database',
       		],
       	},
       	// {
