@@ -1,0 +1,41 @@
+---
+title: インストール
+description: Accellaのインストール方法
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+
+## 前提条件
+
+- Node.js - v20.3.0、v22.0.0以上
+
+## Accellaのインストール
+
+<Steps>
+
+1. 以下のコマンドを実行して新しいディレクトリを作成し、Accellaとその依存関係をインストールします:
+
+   ```bash
+   npm create accella@latest my-app
+   ```
+   `my-app`はアプリが作成されるディレクトリの名前です。\
+   このプロセスは数分かかる場合があります。
+
+2. 新しく作成されたディレクトリに移動します:
+
+   ```bash
+   cd my-app
+   ```
+
+3. 開発サーバーを起動します:
+
+   ```bash
+   npm run dev
+   ```
+
+4. ブラウザを開き、http://localhost:4321 にアクセスします。
+
+   ページが正しく表示されれば、インストールは完了です!!
+
+</Steps>

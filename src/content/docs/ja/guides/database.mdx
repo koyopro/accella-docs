@@ -1,0 +1,136 @@
+---
+title: データベース設定
+description: Accellaのインストール方法
+---
+
+import { Code } from '@astrojs/starlight/components';
+import { Steps } from '@astrojs/starlight/components';
+
+Accellaは、テーブル定義とマイグレーションにPrismaを使用し、ORMとしてAccel Recordを使用します。MySQL、PostgreSQL、SQLiteのデータベースエンジンをサポートしており、デフォルト設定はSQLiteです。
+
+## データベースの初期化
+
+設定を変更した後、データベースを初期化するには次のコマンドを実行します。
+
+~~~bash
+npx prisma migrate deploy
+~~~
+
+## データベース設定の変更
+
+このセクションでは、データベースエンジンの切り替えと接続詳細の指定方法について説明します。
+
+### SQLiteデータベースの変更
+
+デフォルトでは、AccellaはSQLiteを使用するように設定されています。SQLiteデータベースを変更する手順は以下の通りです。SQLite接続には`better-sqlite3`パッケージが使用されます。
+
+<Steps>
+
+1. `.env`ファイルの`DATABASE_URL`を変更して、希望するデータベースパスを指定します。
+
+   <Code code='DATABASE_URL="file:/path/to/dev.db"' lang="dotenv" title='.env' />
+
+2. データベースを初期化して設定を完了します。
+
+   ~~~bash
+   npx prisma migrate deploy
+   ~~~
+
+</Steps>
+
+### MySQLの使用
+
+export const mysqlSource = `
+datasource db {
+  provider = "mysql" // ここを変更
+  url      = env("DATABASE_URL")
+}
+`;
+
+<Steps>
+
+1. 次のコマンドで`mysql2`パッケージをインストールします。
+
+   ~~~bash
+   npm install mysql2
+   ~~~
+
+2. `db/schema/main.prisma`ファイルの`provider`を`mysql`に変更します。
+
+   <Code code={mysqlSource} lang="prisma" title='db/schema/main.prisma' />
+
+3. `.env`ファイルの`DATABASE_URL`をMySQLの接続詳細に変更します。
+
+   <Code code='DATABASE_URL="mysql://root:@localhost:3306/accella_dev"' lang="dotenv" title='.env' />
+
+4. データベースを初期化して設定を完了します。
+
+   ~~~bash
+   npx prisma migrate deploy
+   ~~~
+
+</Steps>
+
+### PostgreSQLの使用
+
+export const pgSource = `
+datasource db {
+  provider = "postgresql" // ここを変更
+  url      = env("DATABASE_URL")
+}
+`;
+
+<Steps>
+
+1. 次のコマンドで`pg`パッケージをインストールします。
+
+   ~~~bash
+   npm install pg
+   ~~~
+
+2. `db/schema/main.prisma`ファイルの`provider`を`postgresql`に変更します。
+
+   <Code code={pgSource} lang="prisma" title='db/schema/main.prisma' />
+
+3. `.env`ファイルの`DATABASE_URL`をPostgreSQLの接続詳細に変更します。
+
+   <Code code='DATABASE_URL="postgresql://test:password@localhost:5432/accella_dev"' lang="dotenv" title='.env' />
+
+4. データベースを初期化して設定を完了します。
+
+   ~~~bash
+   npx prisma migrate deploy
+   ~~~
+
+</Steps>
+
+## 高度なデータベース設定
+
+export const sqliteSource = `
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+`;
+
+Accellaは、テーブル定義とマイグレーションにPrismaを使用します。Prismaのデータベース接続設定は`db/schema/main.prisma`に記述されています。
+
+<Code code={sqliteSource} lang="prisma" title='db/schema/main.prisma' />
+
+ORMであるAccel Recordの初期化プロセスは`src/config/initializers/database.ts`に記述されています。
+
+export const setupDatabase = `
+import { initAccelRecord } from "accel-record";
+import { getDatabaseConfig } from "../../models";
+
+export default async () => {
+  await initAccelRecord(getDatabaseConfig());
+};
+`;
+
+<Code code={setupDatabase} lang="ts" title='src/config/initializers/database.ts' />
+
+これらのセクションを変更することで、より詳細な設定が可能です。詳細については、それぞれのドキュメントを参照してください。
+
+- [Connection URLs (Reference) | Prisma Documentation](https://www.prisma.io/docs/orm/reference/connection-urls)
+- [Accel Record README（GitHub）](https://github.com/koyopro/accella/blob/main/packages/accel-record/README-ja.md)
