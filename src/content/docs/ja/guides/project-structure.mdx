@@ -1,0 +1,57 @@
+---
+title: プロジェクト構造
+description: Accellaプロジェクトのディレクトリ構造
+---
+
+import { FileTree } from '@astrojs/starlight/components';
+
+`create accella`コマンドでプロジェクトを作成すると、以下のようなディレクトリ構造が生成されます。
+
+Accellaは基本的にAstroのプロジェクト構造に従いますが、データベース関連のファイルを格納するための `db/` ディレクトリや、Accel Recordに関連するファイルを格納するための `src/models/` ディレクトリなどが追加されています。
+
+## プロジェクト構造の概要
+
+プロジェクト内には以下のフォルダやファイルがあります：
+
+<FileTree>
+
+- db/
+  - schema/
+    - main.prisma
+- src/
+  - config/
+    - session.ts
+    - initializers/
+      - database.ts
+  - models/
+    - index.ts
+  - pages/
+    - index.astro
+- public/
+- package.json
+
+</FileTree>
+
+### `db/`
+
+データベース関連のファイルが格納されます。
+`db/schema/main.prisma` はPrismaのスキーマファイルで、ここでデータベースモデルを定義できます。
+モデルを定義すると、`db/migrations/` にマイグレーションファイルが生成されます。
+
+### `src/config/`
+
+`src/config/` には設定ファイルが含まれます。
+`session.ts` はセッション管理の設定に使用され、`initializers/` にはサーバー起動時に実行されるファイルが含まれます。
+
+### `src/models/`
+
+スキーマファイルに基づいて生成されたAccel Record関連のファイルが `src/models/` に格納されます。
+
+### `src/pages/`
+
+Astroは `src/pages/` ディレクトリ内の `.astro` または `.md` ファイルを探します。各ページはファイル名に基づいてルートとして公開されます。
+
+### `public/`
+
+画像などの静的アセットは `public/` ディレクトリに配置できます。
+
