@@ -1,0 +1,114 @@
+---
+title: モデルの作成
+description: モデルの作成方法とクラスの利用方法について説明します
+---
+
+import { Code, Steps } from '@astrojs/starlight/components';
+
+このページでは、モデルの追加方法と、モデルに対応するクラスの利用方法について説明します。
+Accellaでは、テーブル定義とマイグレーションにPrismaを、ORMにAccel Recordを使用しています。
+
+## モデルの追加手順
+
+<Steps>
+
+1. スキーマの編集
+
+   `db/schema/main.prisma`がモデルのスキーマファイルになります。
+   ここに、モデルを追加していきます。ここでは、Userモデルを追加する例を示します。
+   
+   <Code code={`model User {
+       id        Int    @id @default(autoincrement())
+       firstName String
+       lastName  String
+       age       Int?
+   }`} lang="prisma" title="db/schema/main.prisma" />
+
+2. マイグレーションの実行
+   
+   ```bash
+   npx prisma migrate dev
+   ```
+   
+   このコマンドを実行すると、以下の処理が行われます:
+   
+   - `db/migrations/` ディレクトリ以下に、SQLマイグレーションファイルを生成します。
+   - データベースを新規に作成し、SQLマイグレーションを実行します。
+   - `src/models/` ディレクトリ以下に、各モデルに対応したファイルが生成します。
+
+</Steps>
+
+以上で、モデルの追加が完了しました。
+
+## テーブル操作のサンプル
+
+上記の例では、Userモデルに対応したUserクラスが生成されます。
+以下は、Userクラスを利用してCRUD処理を行うTypeScriptでのサンプルコードです。
+
+```typescript
+import { User } from "src/models/index.js";
+
+// Create a new user
+const user: User = User.create({
+  firstName: "John",
+  lastName: "Doe",
+});
+
+// Update the user
+user.update({
+  age: 26,
+});
+
+// Get all users
+for (const user of User.all()) {
+  console.log(user.firstName);
+}
+
+// Find a user
+const john: User | undefined = User.findBy({
+  firstName: "John",
+  lastName: "Doe",
+});
+
+// Delete the user
+john.delete();
+```
+
+## モデルに対応するクラスの拡張
+
+上記の例では `src/models/user.ts` ファイルに、Userモデルに対応したクラスが生成されます。
+このクラスには自由にメソッドを追加することができます。
+
+```typescript
+// src/models/user.ts
+import { ApplicationRecord } from "./applicationRecord.js";
+
+export class UserModel extends ApplicationRecord {
+  // Define a method to get the full name
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+```
+
+以下のようにクラスへ定義したメソッドを呼び出すことができます。
+
+```typescript
+import { User } from "src/models/index.js";
+
+const user = User.create({
+  firstName: "John",
+  lastName: "Doe",
+});
+
+console.log(user.fullName); // => "John Doe"
+```
+
+## 関連ドキュメント
+
+- 利用するデータベースの変更に関しては[データベース設定](./database)ページを参照してください。
+  - MySQLやPostgreSQLなど、SQLite以外のデータベースを利用する場合の設定方法が記載されています。
+- スキーマの定義に関しては[Prisma schema](https://www.prisma.io/docs/orm/prisma-schema)を参照してください。
+  - モデルの詳細な定義方法や、リレーションの定義方法などが記載されています。
+- ORMの詳細については、[Accel Record README](https://github.com/koyopro/accella/blob/main/packages/accel-record/README-ja.md)を参照してください。
+  - 豊富なクエリインターフェースや、型についての詳細なども記載されています。

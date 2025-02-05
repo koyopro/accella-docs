@@ -24,7 +24,7 @@ export default defineConfig({
       sidebar: [
         {
           label: "Start a new project",
-          items: ["guides/installation", "guides/project-structure", "guides/database"],
+          items: ["guides/installation", "guides/project-structure", "guides/database", "guides/models"],
         },
         // {
         // 	label: 'Reference',

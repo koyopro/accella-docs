@@ -1,0 +1,114 @@
+---
+title: Creating Models
+description: Project structure of an Accella project
+---
+
+import { Code, Steps } from '@astrojs/starlight/components';
+
+This page explains how to add models and use the corresponding classes.
+In Accella, Prisma is used for table definitions and migrations, and Accel Record is used as the ORM.
+
+## Steps to Add a Model
+
+<Steps>
+
+1. Edit the Schema
+
+   The `db/schema/main.prisma` file is the schema file for models.
+   Here, we will add a model. Below is an example of adding a User model.
+   
+   <Code code={`model User {
+       id        Int    @id @default(autoincrement())
+       firstName String
+       lastName  String
+       age       Int?
+   }`} lang="prisma" title="db/schema/main.prisma" />
+
+2. Run the Migration
+   
+   ```bash
+   npx prisma migrate dev
+   ```
+   
+   Running this command will:
+   
+   - Generate SQL migration files in the `db/migrations/` directory.
+   - Create a new database and apply the SQL migrations.
+   - Generate files corresponding to each model in the `src/models/` directory.
+
+</Steps>
+
+That's it! You've successfully added a model.
+
+## Sample Table Operations
+
+In the example above, a User class corresponding to the User model is generated.
+Below is a sample TypeScript code for performing CRUD operations using the User class.
+
+```typescript
+import { User } from "src/models/index.js";
+
+// Create a new user
+const user: User = User.create({
+  firstName: "John",
+  lastName: "Doe",
+});
+
+// Update the user
+user.update({
+  age: 26,
+});
+
+// Get all users
+for (const user of User.all()) {
+  console.log(user.firstName);
+}
+
+// Find a user
+const john: User | undefined = User.findBy({
+  firstName: "John",
+  lastName: "Doe",
+});
+
+// Delete the user
+john.delete();
+```
+
+## Extending the Class Corresponding to a Model
+
+In the example above, a class corresponding to the User model is generated in the `src/models/user.ts` file.
+You can freely add methods to this class.
+
+```typescript
+// src/models/user.ts
+import { ApplicationRecord } from "./applicationRecord.js";
+
+export class UserModel extends ApplicationRecord {
+  // Define a method to get the full name
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+```
+
+You can call the methods defined in the class as shown below.
+
+```typescript
+import { User } from "src/models/index.js";
+
+const user = User.create({
+  firstName: "John",
+  lastName: "Doe",
+});
+
+console.log(user.fullName); // => "John Doe"
+```
+
+## Related Documentation
+
+- For changing the database used, refer to the [Database Configuration](./database) page.
+  - It includes instructions for setting up databases other than SQLite, such as MySQL or PostgreSQL.
+- For schema definitions, refer to the [Prisma schema](https://www.prisma.io/docs/orm/prisma-schema).
+  - It includes detailed instructions on defining models and relations.
+- For more details on the ORM, refer to the [Accel Record README](https://github.com/koyopro/accella/blob/main/packages/accel-record/README.md).
+  - It includes detailed information on the rich query interface and types.
