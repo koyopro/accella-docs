@@ -14,17 +14,23 @@ export default defineConfig({
       defaultLocale: "root",
       locales: {
         root: {
-          label: 'English',
-          lang: 'en',
+          label: "English",
+          lang: "en",
         },
-        'ja': {
-          label: '日本語',
+        ja: {
+          label: "日本語",
         },
       },
       sidebar: [
         {
           label: "Start a new project",
-          items: ["guides/installation", "guides/project-structure", "guides/database", "guides/models"],
+          items: [
+            "guides/installation",
+            "guides/project-structure",
+            "guides/database",
+            "guides/models",
+            "guides/testing",
+          ],
         },
         // {
         // 	label: 'Reference',

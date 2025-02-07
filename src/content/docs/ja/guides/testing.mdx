@@ -1,0 +1,71 @@
+---
+title: テスト
+description: テストの実行方法
+---
+
+Accellaプロジェクトには、初期化時点で[Vitest](https://vitest.dev/)とその設定が含まれています。これにより、すぐにテストを開始することができます。
+
+## テストの実行
+
+テストを実行するには、以下のコマンドを使用します：
+
+```bash
+npm run test
+```
+
+このコマンドを実行することで、プロジェクト内のすべてのテストが実行されます。
+
+- `tests/sample.test.ts` にテストのサンプルが含まれています。こちらのファイルを参考にテストを追加してください。
+- テスト用データベースの設定は `tests/vitest.setup.ts` に記載されています。必要に応じて参照してください。
+
+## モデルのファクトリー
+
+ファクトリーライブラリとして[Accel Record Factory](https://github.com/koyopro/accella/tree/main/packages/accel-record-factory)が用意されており、
+モデルを初期化したりデータベースに保存するために利用できます。
+スキーマを定義してモデルを追加すると `tests/factories/` ディレクトリに各モデルに対応したファクトリーが自動で生成されます。
+
+例えばUserモデルを定義した場合は、`UserFactory`の定義を含む`tests/factories/user.ts`が生成されます。
+
+```typescript
+// tests/factories/user.ts
+
+import { defineFactory } from "accel-record-factory";
+import { User } from "../../src/models/index.js";
+
+export const UserFactory = defineFactory(User, {
+  // firstName: "MyString",
+  // lastName: "MyString",
+  // age: 1,
+});
+
+export { UserFactory as $User };
+```
+
+ファクトリーを使用することで、以下のようにテストコード内で簡単にモデルを作成することができます。
+
+```typescript
+// tests/user.test.ts
+
+import { $User } from "./factories/user";
+
+const newUser = $User.build();
+
+const user = $User.create({
+  firstName: "John",
+  lastName: "Doe",
+  age: 20,
+});
+```
+
+デフォルト値の設定、連番の利用、関連の生成、Traitsなどの機能が利用できます。
+詳細については[Accel Record Factory README](https://github.com/koyopro/accella/blob/main/packages/accel-record-factory/README.md)を参照してください。
+
+## Astroコンポーネントのテスト
+
+Astroにより、Vitest上でのコンポーネントのテストもサポートされています。詳細については、[Vitest and Container API](https://docs.astro.build/en/guides/testing/#vitest-and-container-api)を参照してください。
+
+## End-to-endテスト
+
+End-to-endテスト(E2Eテスト)は初期状態ではセットアップされていませんが、プロジェクトに追加することができます。
+追加方法に関してはAstroドキュメントの[End-to-end tests](https://docs.astro.build/en/guides/testing/#end-to-end-tests)を参照してください。
+Playwright、Cypress、NightwatchJSなどの導入方法が記載されています。
