@@ -6,7 +6,11 @@ description: データベースを設定する方法
 import { Code } from '@astrojs/starlight/components';
 import { Steps } from '@astrojs/starlight/components';
 
-Accellaは、テーブル定義とマイグレーションにPrismaを使用し、ORMとしてAccel Recordを使用します。MySQL、PostgreSQL、SQLiteのデータベースエンジンをサポートしており、デフォルト設定はSQLiteです。
+プロジェクト初期化時点でAccellaは、データベースとしてSQLiteが利用できるよう設定されています。
+これを変更しない場合は、この章をスキップしても問題ありません。
+データベースエンジンにMySQLやPostgreSQLを使用したい場合、SQLiteの接続詳細を変更したい場合にはこの章を参照してください。
+
+テーブル定義とマイグレーションにPrismaを使用し、ORMとしてAccel Recordを使用します。
 
 ## データベースの初期化
 

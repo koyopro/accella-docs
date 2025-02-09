@@ -6,7 +6,9 @@ description: How to configure the database
 import { Code } from '@astrojs/starlight/components';
 import { Steps } from '@astrojs/starlight/components';
 
-Accella uses Prisma for table definitions and migrations, and Accel Record as the ORM. It supports MySQL, PostgreSQL, and SQLite database engines, with SQLite being the default configuration.
+By default, Accella is configured to use SQLite as the database. If you do not wish to change this, you can skip this section. Refer to this section if you want to use MySQL or PostgreSQL as the database engine or if you want to change the SQLite connection details.
+
+Prisma is used for table definitions and migrations, and Accel Record is used as the ORM.
 
 ## Initializing the Database
 
