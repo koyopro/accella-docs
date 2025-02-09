@@ -28,7 +28,7 @@ npm run test
 Vitestは通常、マルチスレッドでテストを実行します。
 各スレッドで異なるデータベースを使用するために、`VITEST_POOL_ID`を使用してデータベースを分けるようにします。
 
-SQLite以外(MySQLやPostgreSQL)を使用する場合は、[データベース設定](./database)で`.env`を変更したのと同様に、
+SQLite以外(MySQLやPostgreSQL)を使用する場合は、[データベース設定](database)で`.env`を変更したのと同様に、
 `.env.test`でテスト用データベースの設定も変更する必要があります。
 
 **MySQLの例**
