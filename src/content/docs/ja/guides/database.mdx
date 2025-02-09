@@ -16,9 +16,9 @@ import { Steps } from '@astrojs/starlight/components';
 
 設定を変更した後、データベースを初期化するには次のコマンドを実行します。
 
-~~~bash
+```bash
 npx prisma migrate deploy
-~~~
+```
 
 ## データベース設定の変更
 
@@ -36,9 +36,9 @@ npx prisma migrate deploy
 
 2. データベースを初期化して設定を完了します。
 
-   ~~~bash
+   ```bash
    npx prisma migrate deploy
-   ~~~
+   ```
 
 </Steps>
 
@@ -55,9 +55,9 @@ datasource db {
 
 1. 次のコマンドで`mysql2`パッケージをインストールします。
 
-   ~~~bash
+   ```bash
    npm install mysql2
-   ~~~
+   ```
 
 2. `db/schema/main.prisma`ファイルの`provider`を`mysql`に変更します。
 
@@ -69,9 +69,9 @@ datasource db {
 
 4. データベースを初期化して設定を完了します。
 
-   ~~~bash
+   ```bash
    npx prisma migrate deploy
-   ~~~
+   ```
 
 </Steps>
 
@@ -88,9 +88,9 @@ datasource db {
 
 1. 次のコマンドで`pg`パッケージをインストールします。
 
-   ~~~bash
+   ```bash
    npm install pg
-   ~~~
+   ```
 
 2. `db/schema/main.prisma`ファイルの`provider`を`postgresql`に変更します。
 
@@ -102,9 +102,9 @@ datasource db {
 
 4. データベースを初期化して設定を完了します。
 
-   ~~~bash
+   ```bash
    npx prisma migrate deploy
-   ~~~
+   ```
 
 </Steps>
 
