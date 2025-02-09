@@ -3,6 +3,8 @@ title: テスト
 description: テストの実行方法
 ---
 
+import { Code } from '@astrojs/starlight/components';
+
 Accellaプロジェクトには、初期化時点で[Vitest](https://vitest.dev/)とその設定が含まれています。これにより、すぐにテストを開始することができます。
 
 ## テストの実行
@@ -15,8 +17,31 @@ npm run test
 
 このコマンドを実行することで、プロジェクト内のすべてのテストが実行されます。
 
-- `tests/sample.test.ts` にテストのサンプルが含まれています。こちらのファイルを参考にテストを追加してください。
-- テスト用データベースの設定は `tests/setup.ts` に記載されています。必要に応じて参照してください。
+`tests/sample.test.ts` にテストのサンプルが含まれています。こちらのファイルを参考にテストを追加してください。
+
+## テスト用データベースの設定
+
+`.env.test` に記載されている`DATABASE_URL`の値を指定することで、テスト用データベースの設定を変更することができます。
+
+<Code code='DATABASE_URL="file:../test${VITEST_POOL_ID}.db"' lang="dotenv" title='.env.test' />
+
+Vitestは通常、マルチスレッドでテストを実行します。
+各スレッドで異なるデータベースを使用するために、`VITEST_POOL_ID`を使用してデータベースを分けるようにします。
+
+SQLite以外(MySQLやPostgreSQL)を使用する場合は、[データベース設定](./database)で`.env`を変更したのと同様に、
+`.env.test`でテスト用データベースの設定も変更する必要があります。
+
+**MySQLの例**
+
+<Code code='DATABASE_URL="mysql://root:@localhost:3306/test${VITEST_POOL_ID}"' lang="dotenv" title='.env.test' />
+
+**PostgreSQLの例**
+
+<Code code='DATABASE_URL="postgresql://test:password@localhost:5432/test${VITEST_POOL_ID}"' lang="dotenv" title='.env.test' />
+
+テスト実行時には、各データベース毎にマイグレーションが実行されます。
+また、テスト毎にデータベースへの操作をロールバックするため、テスト間でデータが共有されることはありません。
+これらの処理は `tests/setup.ts` で実行されています。必要に応じて参照してください。
 
 ## モデルのファクトリー
 

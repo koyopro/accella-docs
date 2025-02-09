@@ -3,6 +3,8 @@ title: Testing
 description: How to run tests
 ---
 
+import { Code } from '@astrojs/starlight/components';
+
 Accella projects come with [Vitest](https://vitest.dev/) and its configuration included from the start. This allows you to begin testing immediately.
 
 ## Running Tests
@@ -13,10 +15,29 @@ To run tests, use the following command:
 npm run test
 ```
 
-Running this command will execute all tests within the project.
+This command will execute all tests within the project.
 
-- A sample test is included in `tests/sample.test.ts`. Use this file as a reference to add your own tests.
-- The test database setup is described in `tests/setup.ts`. Refer to it as needed.
+A sample test is included in `tests/sample.test.ts`. Use this file as a reference to add your own tests.
+
+## Configuring the Test Database
+
+You can change the test database configuration by specifying the value of `DATABASE_URL` in `.env.test`.
+
+<Code code='DATABASE_URL="file:../test${VITEST_POOL_ID}.db"' lang="dotenv" title='.env.test' />
+
+Vitest typically runs tests in multiple threads. To use different databases for each thread, use `VITEST_POOL_ID` to separate the databases.
+
+If you are using a database other than SQLite (such as MySQL or PostgreSQL), you will need to change the test database configuration in `.env.test` just as you did in `.env` for the main [Database Configuration](./database).
+
+**Example for MySQL**
+
+<Code code='DATABASE_URL="mysql://root:@localhost:3306/test${VITEST_POOL_ID}"' lang="dotenv" title='.env.test' />
+
+**Example for PostgreSQL**
+
+<Code code='DATABASE_URL="postgresql://test:password@localhost:5432/test${VITEST_POOL_ID}"' lang="dotenv" title='.env.test' />
+
+During test execution, migrations will be run for each database. Additionally, database operations will be rolled back after each test, ensuring no data is shared between tests. These processes are invoked in `tests/setup.ts`. Refer to this file as needed.
 
 ## Model Factory
 
