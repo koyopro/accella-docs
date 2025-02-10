@@ -1,0 +1,28 @@
+---
+title: ページを追加する
+description: 新規にページを追加する方法とルーティング
+---
+
+Astroのファイルベースルーティングが利用できます。
+新しいページを追加するには、`src/pages`ディレクトリに新しいファイルを作成します。
+
+## Astroページの作成例
+
+プロジェクト初期化時には `src/pages/index.astro` が用意されています。
+
+例えば `src/pages/about.astro`を作成すると、開発サーバー起動時に http://localhost:4321/about でアクセスできるようになります。
+
+```astro
+// src/pages/about.astro
+<p>This is the about page.</p>
+```
+
+## 関連するドキュメント
+
+表示できるファイルの種類や、エラーページについてはAstroの[ページ](https://docs.astro.build/en/basics/astro-pages/)ガイドを参照してください。
+
+また、Astroの[ルーティング](https://docs.astro.build/en/guides/routing/)ガイドでは以下のような話題がカバーされています。
+- ページ間の移動
+- 静的ルーティング
+- 動的ルーティング
+- リダイレクト

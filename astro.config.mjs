@@ -29,6 +29,7 @@ export default defineConfig({
             "guides/project-structure",
             "guides/database",
             "guides/models",
+            "guides/add-page",
             "guides/testing",
           ],
         },

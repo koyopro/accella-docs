@@ -1,0 +1,28 @@
+---
+title: Adding a Page
+description: How to add a new page and routing
+---
+
+You can use Astro's file-based routing.
+To add a new page, create a new file in the `src/pages` directory.
+
+## Example of Creating an Astro Page
+
+When you initialize a project, `src/pages/index.astro` is provided.
+
+For example, if you create `src/pages/about.astro`, you will be able to access it at http://localhost:4321/about when the development server is running.
+
+```astro
+// src/pages/about.astro
+<p>This is the about page.</p>
+```
+
+## Related Documentation
+
+For information on the types of files that can be displayed and error pages, refer to Astro's [Pages](https://docs.astro.build/en/basics/astro-pages/) guide.
+
+Additionally, Astro's [Routing](https://docs.astro.build/en/guides/routing/) guide covers topics such as:
+- Navigating between pages
+- Static routes
+- Dynamic routes
+- Redirects
