@@ -33,6 +33,12 @@ export default defineConfig({
             "guides/testing",
           ],
         },
+        {
+          label: "Guides",
+          items: [
+            "guides/session",
+          ],
+        },
         // {
         // 	label: 'Reference',
         // 	autogenerate: { directory: 'reference' },
