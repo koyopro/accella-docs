@@ -1,0 +1,106 @@
+---
+title: セッション管理
+description: セッション管理について
+---
+
+Accellaではセッション管理用オブジェクトを`Astro.locals.session`で提供します。
+この機能は[astro-cookie-session](https://github.com/koyopro/astro-cookie-session)をベースにしており、セッション情報は暗号化されCookieに保存されます。
+
+```astro
+// src/pages/user.astro
+---
+import { User } from '../models';
+
+if (Astro.request.method === 'POST') {
+  Astro.locals.session.user = User.findBy({ email: 'test@example.com' });
+}
+const currentUser: User | undefined = Astro.locals.session.user;
+---
+{currentUser ? <p>Hello, {currentUser.name}!</p> : <p>Hello, Guest!</p>}
+```
+
+セッション情報には、数値・文字列・連想配列などJSONとして表現できる型の他に、Accel Recordのモデルクラスのインスタンスを保存することもできます。
+
+## セッション情報の型定義
+
+デフォルトではセッションから取り出した値はany型ですが、`src/config/session.ts`の型定義を変更することで型安全に利用することができます。
+
+```typescript
+// src/config/session.ts
+import { type Session as BaseSession } from "accella/session";
+import { User } from "../models";
+
+// You can define the type of the session object here
+export type SessionData = {
+  user: User; // Add here
+};
+
+export type Session = BaseSession & Partial<SessionData>;
+```
+
+## Flash Messages
+
+`session.flash`オブジェクトは、セッションデータ内に一度だけ取得できるメッセージを保存するために使用されます。`session.flash.set()`メソッドを使用してメッセージを設定します。メッセージは`session.flash.get()`メソッドを使用して取得できますが、取得後はCookieから削除され、次のリクエストでは利用できなくなります。
+
+```astro
+---
+// src/pages/index.astro
+const { session }  = Astro.locals;
+
+if (Astro.request.method === "POST") {
+  const form = await Astro.request.formData();
+  session.set("userId", form.get("id") as string); // Set the session data
+  // session.userId = form.get("id") as string; // You can also use this code
+
+  session.flash.set("notice", "You have successfully logged in."); // Set the flash message
+  // session.flash["notice"] = "You have successfully logged in."; // You can also use this code
+}
+
+const userId = session.get("userId"); // Get the session data
+// const userId = session.userId; // You can also use this code
+const notice = session.flash.get("notice"); // Get the flash message. The message will be deleted after getting it.
+// const flash = session.flash["notice"]; // You can also use this code
+---
+
+{notice && <p>{notice}</p>}
+
+{
+  userId ? (
+    <>
+      <p>Hello, {userId}!</p>
+      <form method="post" action="/signout">
+        <input type="submit" value="Log out" />
+      </form>
+    </>
+  ) : (
+    <form method="post">
+      <input type="text" name="id" placeholder="UserId" />
+      <input type="submit" value="Log in" />
+    </form>
+  )
+}
+```
+
+## オプションの指定
+
+`src/config/session.ts`の`sessionOptions`オブジェクトを使用して、
+`astro-cookie-session`の`createCookieSessionStorage`に渡すオプションを指定することができます。
+
+```ts
+// src/config/session.ts
+import { type Session as BaseSession, type Options } from "accella/session";
+
+/* ... */
+
+export const sessionOptions: Options = {
+  cookieName: "astro.session",
+  cookieSetOptions: {
+    httpOnly: true,
+    secure: import.meta.env.PROD,
+    path: undefined,
+    expires: undefined,
+    maxAge: undefined,
+  },
+};
+```
+
