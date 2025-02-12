@@ -1,0 +1,70 @@
+---
+title: ページネーション
+description: ページネーションについて
+---
+
+`paginate` はページネーションコンポーネントを生成する関数です。クエリとオプションを引数として受け取ります。
+
+```astro
+---
+// src/pages/accounts/index.astro
+import { paginate } from "accel-web";
+import { Account } from "src/models";
+
+const url = new URL(Astro.request.url);
+const page = Number(url.searchParams.get("p")) || 1;
+
+const { Nav, PageEntriesInfo } = paginate(Account.order("id", "desc"), { page, per: 10, window: 1 });
+---
+
+<!-- nav -->
+<Nav />
+
+<!-- info -->
+<PageEntriesInfo />
+```
+
+上記のコードは次のようなHTMLを出力します:
+
+```html
+<!-- nav -->
+<nav>
+  <ul class="pagination">
+    <li class="page-item first">
+      <a href="/?p=1" class="page-link">« First</a>
+    </li>
+    <li class="page-item prev">
+      <a rel="prev" href="/?p=2" class="page-link">‹ Prev</a>
+    </li>
+    <li class="page-item disabled gap">
+      <span class="page-link">…</span>
+    </li>
+    <li class="page-item page">
+      <a href="/?p=2" class="page-link"> 2 </a>
+    </li>
+    <li class="page-item page active">
+      <span class="page-link">3</span>
+    </li>
+    <li class="page-item page">
+      <a href="/?p=4" class="page-link"> 4 </a>
+    </li>
+    <li class="page-item disabled gap">
+      <span class="page-link">…</span>
+    </li>
+    <li class="page-item next">
+      <a rel="next" href="/?p=4" class="page-link">Next ›</a>
+    </li>
+    <li class="page-item last">
+      <a href="/?p=6" class="page-link">Last »</a>
+    </li>
+  </ul>
+</nav>
+
+<!-- info -->
+<div class="page-entries-info">Displaying <b>21 - 30</b> of <b>55</b> in total</div>
+```
+
+以下のスタイルは、Bootstrap 5を使用した場合に適用されます。独自のCSSを追加することで、スタイルを上書きすることができます。
+
+![Pagination UI with Bootstrap](https://github.com/user-attachments/assets/7c0dab8d-c22d-47ef-8e31-10eac12c8e06)
+
