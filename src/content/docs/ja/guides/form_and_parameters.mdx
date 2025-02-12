@@ -1,0 +1,198 @@
+---
+title: フォームとリクエストパラメータ
+description: フォームとリクエストパラメータ
+---
+
+## FormFor
+
+`formFor` はフォームコンポーネントを生成する関数です。レコードを引数として受け取ります。
+`RequestParameters` はリクエストパラメータをパースするクラスで、Accella はこれを `Astro.locals.params` を通じて提供します。
+
+これらのツールを使用すると、フォームの作成やリクエストパラメータの取得が簡単になります。
+以下はサインアップフォームの例です。
+
+```astro
+---
+// src/pages/signup.astro
+import { formFor } from "accel-web";
+import Layout from "../layouts/Layout.astro";
+import { Account } from "../models";
+import { z } from "astro/zod";
+
+const account = Account.build({});
+
+if (Astro.request.method === "POST") {
+  // Using zod, you can validate request parameters and extract them with type information
+  const accountParams = Astro.locals.params.require("account").parseWith(
+    z.object({
+      email: z.string(),
+      password: z.string(),
+      passwordConfirmation: z.string(),
+    })
+  );
+  // If strict type information is not required, you can write it as follows
+  /*
+  const accountParams = Astro.locals.params.require("account")
+                             .permit("email", "password", "passwordConfirmation");
+  */
+
+  if (account.update(accountParams)) {
+    return Astro.redirect("/");
+  }
+}
+
+// `formFor` is a helper function that creates a form object for the model
+const { Form, Submit, Label, TextField, PasswordField } = formFor(account);
+---
+
+<Layout title="Sign Up">
+  <main class="container" style="max-width: 700px; min-width: 400px;">
+    <h1>Sign Up</h1>
+    <Form method="post" class="form">
+      {
+        account.errors.fullMessages.length > 0 && (
+          <div class="alert alert-danger">
+            {account.errors.fullMessages.map((message) => (
+              <div>{message}</div>
+            ))}
+          </div>
+        )
+      }
+      <div class="mb-3">
+        <!--
+          The value of Label will be set according to the i18n settings configured in i18next.
+          `accelrecord.attributes.Account.email` is the key to be translated.
+        -->
+        <Label for="email" />
+        <!-- The value of TextField will be pre-filled with the value of account.email -->
+        <TextField attr="email" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <Label for="password" />
+        <PasswordField attr="password" class="form-control" />
+      </div>
+      <div class="mb-3">
+        <Label for="passwordConfirmation" />
+        <PasswordField attr="passwordConfirmation" class="form-control" />
+      </div>
+      <div class="d-flex justify-content-between">
+        <Submit class="btn btn-secondary">Sign Up</Submit>
+        <a href="/" class="btn btn-link">Back</a>
+      </div>
+    </Form>
+  </main>
+</Layout>
+```
+
+### SearchFormFor
+
+`searchFormFor` は検索フォームコンポーネントを生成する関数です。
+
+以下は `searchFormFor` を使用した検索フォームの例です。先に紹介した `paginate` と組み合わせることで、検索フォームとページネーションを実装できます。
+
+```astro
+---
+// src/pages/todos/index.astro
+import { paginate, searchFormFor } from "accel-web";
+import { Todo } from "src/models";
+import Layout from "../../layouts/Layout.astro";
+
+const { params } = Astro.locals;
+const page = Number(params.p) || 1;
+
+// Model.search() returns a search object.
+// params.q is a search query object from query parameters.
+// Example:
+//  Path like "/todos?q.id_eq=1&q.title_cont=foo" is parsed as follows:
+//  { q: { id_eq: 1, title_cont: "foo" } }
+const search = Todo.search(params.q);
+// searchFormFor() returns form fields for search.
+const { NumberField, TextField } = searchFormFor(search);
+
+const { Nav, PageEntriesInfo, records } = paginate(search.result().order("id", "desc"), { page });
+---
+
+<Layout title="TODOs">
+  <main class="container" style="max-width: 700px; min-width: 550px;">
+    <h1 class="text-center">All TODOs</h1>
+    <div class="d-flex justify-content-end">
+      <a href="/todos/new" class="btn btn-link">Add a new todo</a>
+    </div>
+    <form method="get" class="row">
+      <div class="col mb-3">
+        <NumberField attr="id_eq" placeholder="Search by ID" class="form-control" />
+      </div>
+      <div class="col mb-3">
+        <TextField attr="title_cont" placeholder="Search by Title" class="form-control" />
+      </div>
+      <div class="col-md-auto mb-3">
+        <button type="submit" class="btn btn-dark">Search</button>
+        <a href="/todos" class="btn btn-secondary">Clear</a>
+      </div>
+    </form>
+    <ul>
+      {
+        records.map((todo) => (
+          <li>
+            <span>{todo.id}</span>
+            <span>{todo.title}</span>
+            {todo.estimate ? <span>｜{todo.estimate}</span> : null}
+            {todo.dueDate ? <span>{todo.dueDate.toISOString().slice(0, 10)}迄</span> : null}
+            <span>({todo.status})</span>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="d-flex justify-content-center">
+      <Nav />
+    </div>
+    <div class="d-flex justify-content-center">
+      <PageEntriesInfo />
+    </div>
+  </main>
+</Layout>
+```
+
+### SortLink
+
+`SortLink` は、ソート用のリンクを生成するコンポーネントです。クエリとオプションを引数として受け取ります。
+
+```astro
+---
+import { SortLink } from "accel-web";
+import { Account } from "src/models";
+
+const search = Account.search(Astro.locals.params.q);
+---
+<table>
+  <thead>
+    <tr>
+      <th>
+        <!-- Basic Usage -->
+        <SortLink q={search} key="id" />
+      </th>
+      <th>
+        <!--
+          Customization Examples
+          - Specifying multiple sort attributes
+          - Changing the appearance of ascending/descending arrows (default is "▲" and "▼")
+          - Custom text
+        -->
+        <SortLink q={search} key={["email", "id desc"]} asc="↓" desc="↑">
+          Email Address
+        </SortLink>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      search.result().map((account) => (
+        <tr>
+          <td>{account.id}</td>
+          <td>{account.email}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+```
