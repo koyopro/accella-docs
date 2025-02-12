@@ -38,6 +38,7 @@ export default defineConfig({
           items: [
             "guides/pagination",
             "guides/form_and_parameters",
+            "guides/csrf_protection",
           ],
         },
         // {

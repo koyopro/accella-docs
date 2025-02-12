@@ -1,0 +1,74 @@
+---
+title: CSRF対策
+description: CSRF対策について
+---
+
+## クロスサイトリクエストフォージェリ（CSRF）対策
+
+AccellaにはCSRF対策が組み込まれています。POSTやその他の非GETリクエストを送信する際には、適切なトークンをリクエストに含める必要があります。
+そうしないと、`InvalidAuthenticityToken`エラーが発生します。[フレームワークの機能を使用してフォームを作成する](form_and_parameters)場合、CSRFトークンは自動的に生成され、リクエストに含まれます。
+
+### フレームワークの機能を使用せずにフォームを作成する場合
+
+フォームを手動で作成する場合は、以下のように`CsrfTokenField`コンポーネントを使用してトークンを含めてください。
+
+```astro
+---
+import CsrfTokenField from "accel-web/form/CsrfTokenField.astro";
+---
+
+<form method="POST">
+  <CsrfTokenField />
+  <!-- ... -->
+</form>
+```
+
+### AjaxリクエストでのCSRFトークンの使用
+
+レイアウトファイルで`CsrfMetaTags`コンポーネントを使用してメタタグを生成します。これらのメタタグからトークンを取得し、`X-CSRF-Token`リクエストヘッダーに設定します。
+
+```astro
+---
+import { CsrfMetaTags } from "accel-web";
+---
+
+<!-- ... -->
+  <head>
+    <CsrfMetaTags />
+    <!-- Meta tags like the following will be generated:
+    <meta name="csrf-param" content="authenticity_token">
+    <meta name="csrf-token" content="xxxx">
+    -->
+  </head>
+<!-- ... -->
+```
+
+
+
+## AuthenticityTokenのヘルパー関数
+
+`defineAuthenticityToken`と`validateAuthenticityToken`は、リクエスト用のトークンを準備および検証するために使用されます。
+これらはAccellaが提供するAstroミドルウェア内で使用されます。
+
+```ts
+import { RequestParameters } from "accel-web";
+import { defineAuthenticityToken, validateAuthenticityToken } from "accel-web/csrf";
+import { APIContext } from "astro";
+import { getSession } from "./session";
+
+export const onRequest = async (context: APIContext, next: any) => {
+  const { cookies, request, params, locals } = context;
+  locals.session = getSession(cookies);
+  locals.params = await RequestParameters.from(request, params);
+
+  defineAuthenticityToken(locals, locals.session);
+  validateAuthenticityToken(locals.params, locals.session, request);
+
+  return await next();
+};
+```
+
+`defineAuthenticityToken`が実行されると、トークンは`Astro.locals.authenticityToken`から取得できるようになります。このトークンは、`formFor`を使用してフォームを生成する際に自動的に埋め込まれます。
+
+`validateAuthenticityToken`は、POST、PUT、PATCH、およびDELETEリクエストの認証トークンを検証します。トークンが一致しない場合、`InvalidAuthenticityToken`例外がスローされます。
+
