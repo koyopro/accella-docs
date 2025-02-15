@@ -1,0 +1,145 @@
+---
+title: 国際化 (i18n)
+description: 国際化について
+---
+
+Accellaでは[i18next](https://www.i18next.com/)を使って国際化をサポートしています。
+`src/config/initializers/i18n.ts`にi18nextの初期化処理を記述できます。
+
+
+## モデルの翻訳
+
+`Model.model_name.human`メソッドと`Model.human_attribute_name(attribute)`メソッドを使うことで、モデル名と属性名の翻訳を参照できます。
+
+```ts
+// src/config/initializers/i18n.ts
+import i18next from "i18next";
+
+export default async () => {
+  await i18next.init({
+    lng: "ja",
+    resources: {
+      ja: {
+        translation: {
+          // モデル名
+          "accelrecord.models.User": "User",
+          // 属性名
+          "accelrecord.attributes.User.firstName": "First Name",
+          "accelrecord.attributes.User.lastName": "Last Name",
+        },
+      },
+    },
+  });
+};
+```
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+console.log(User.modelName.human); // => "ユーザー"
+console.log(User.humanAttributeName("firstName")); // => "名"
+```
+
+## エラーメッセージの翻訳
+
+バリデーションエラーメッセージも翻訳に対応しており、以下からエラーメッセージを参照します。
+
+```
+accelrecord.errors.models.[ModelName].attributes.[attribute].[messageKey]
+accelrecord.errors.models.[ModelName].[messageKey]
+accelrecord.errors.messages.[messageKey]
+errors.attributes.[attribute].[messageKey]
+errors.messages.[messageKey]
+```
+
+```ts
+// src/models/user.ts
+import { validates } from "accel-record/validations";
+import { ApplicationRecord } from "./applicationRecord.js";
+
+class UserModel extends ApplicationRecord {
+  static validations = validates(this, [["firstName", { presence: true }]]);
+}
+```
+
+上のUserModelの例では、`'blank'`というメッセージキーの翻訳がエラーメッセージに利用されます。
+
+この例では、以下のキーを順に探し、最初に見つかったキーが利用されます。
+
+```
+accelrecord.errors.models.User.attributes.name.blank
+accelrecord.errors.models.User.blank
+accelrecord.errors.messages.blank
+errors.attributes.name.blank
+errors.messages.blank
+```
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+const user = User.build({});
+user.validate();
+console.log(User.errors.fullMessages);
+// => ["名 を入力してください"]
+```
+
+各バリデーションに対応するメッセージキーは以下の通りです。
+
+| バリデーション | オプション | メッセージキー | 式展開 |
+| -------------- | ---------- | -------------- | ------ |
+| acceptance     | -          | 'accepted'     | -      |
+| presence       | -          | 'blank'        | -      |
+| length         | 'minimum'  | 'tooShort'     | count  |
+| length         | 'maximum'  | 'tooLong'      | count  |
+| uniqueness     | -          | 'taken'        | -      |
+| format         | -          | 'invalid'      | -      |
+| inclusion      | -          | 'inclusion'    | -      |
+| numericality   | 'equalTo'  | 'equalTo'      | count  |
+
+式展開が `count` になっているものは、エラーメッセージに `{{count}}` を含むときにその部分がオプションで指定された値に置き換えられます。
+
+## Enumの翻訳
+
+Enumの各値に対しても翻訳を定義することができます。
+
+```ts
+// prisma/schema.prisma
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+model User {
+  /* ... */
+  role Role @default(MEMBER)
+}
+```
+
+`User.role.options()`で、Enumの各値に対応する翻訳を取得することができます。
+各`User`が持つ`role`に対して、`roleText`というプロパティでEnumの値に対応する翻訳を取得することができます。
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+User.role.options(); // => [["メンバー", "MEMBER"], ["管理者", "ADMIN"]]
+
+const user = User.build({});
+user.role; // => "MEMBER"
+user.roleText; // => "メンバー"
+```
+
+`user.role`の例では、以下のキーを順に探し、最初に見つかったキーが利用されます。
+
+```
+enums.User.Role.MEMBER
+enums.defaults.Role.MEMBER
+enums.Role.MEMBER
+```
+
+## 関連リンク
+
+- [i18next](https://www.i18next.com/)

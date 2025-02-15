@@ -39,6 +39,7 @@ export default defineConfig({
             "guides/session",
             "guides/pagination",
             "guides/form_and_parameters",
+            "guides/internationalization",
             "guides/csrf_protection",
           ],
         },

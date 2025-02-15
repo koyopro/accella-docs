@@ -1,0 +1,144 @@
+---
+title: Internationalization (i18n)
+description: About Internationalization
+---
+
+At Accella, we support internationalization using [i18next](https://www.i18next.com/).
+You can write the initialization process for i18next in `src/config/initializers/i18n.ts`.
+
+## Translation of Models
+
+You can refer to translations for model names and attribute names using the `Model.model_name.human` method and the `Model.human_attribute_name(attribute)` method.
+
+```ts
+// src/config/initializers/i18n.ts
+import i18next from "i18next";
+
+export default async () => {
+  await i18next.init({
+    lng: "en",
+    resources: {
+      en: {
+        translation: {
+          // model name
+          "accelrecord.models.User": "User",
+          // attribute name
+          "accelrecord.attributes.User.firstName": "First Name",
+          "accelrecord.attributes.User.lastName": "Last Name",
+        },
+      },
+    },
+  });
+};
+```
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+console.log(User.modelName.human); // => "User"
+console.log(User.humanAttributeName("firstName")); // => "First Name"
+```
+
+## Translation of Error Messages
+
+Validation error messages are also translatable and can be referenced using the following keys:
+
+```
+accelrecord.errors.models.[ModelName].attributes.[attribute].[messageKey]
+accelrecord.errors.models.[ModelName].[messageKey]
+accelrecord.errors.messages.[messageKey]
+errors.attributes.[attribute].[messageKey]
+errors.messages.[messageKey]
+```
+
+```ts
+// src/models/user.ts
+import { validates } from "accel-record/validations";
+import { ApplicationRecord } from "./applicationRecord.js";
+
+class UserModel extends ApplicationRecord {
+  static validations = validates(this, [["firstName", { presence: true }]]);
+}
+```
+
+In the example above, the translation of the message key `'blank'` will be used for the error message.
+
+In this example, the following keys will be searched in order, and the first key found will be used:
+
+```
+accelrecord.errors.models.User.attributes.name.blank
+accelrecord.errors.models.User.blank
+accelrecord.errors.messages.blank
+errors.attributes.name.blank
+errors.messages.blank
+```
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+const user = User.build({});
+user.validate();
+console.log(User.errors.fullMessages);
+// => ["First Name can't be blank"]
+```
+
+The message keys corresponding to each validation are as follows:
+
+| Validation   | Option    | Message Key | Interpolation |
+| ------------ | --------- | ----------- | ------------- |
+| acceptance   | -         | 'accepted'  | -             |
+| presence     | -         | 'blank'     | -             |
+| length       | 'minimum' | 'tooShort'  | count         |
+| length       | 'maximum' | 'tooLong'   | count         |
+| uniqueness   | -         | 'taken'     | -             |
+| format       | -         | 'invalid'   | -             |
+| inclusion    | -         | 'inclusion' | -             |
+| numericality | 'equalTo' | 'equalTo'   | count         |
+
+For those with interpolation set to `count`, that part will be replaced with the value specified in the option when the error message contains `{{count}}`.
+
+## Translation of Enums
+
+You can define translations for each value of an Enum.
+
+```ts
+// prisma/schema.prisma
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+model User {
+  /* ... */
+  role Role @default(MEMBER)
+}
+```
+
+You can use `User.role.options()` to retrieve the translations corresponding to each value of the Enum.
+For each `User` with a `role`, you can retrieve the translation corresponding to the Enum value using the `roleText` property.
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+User.role.options(); // => [["Member", "MEMBER"], ["Admin", "ADMIN"]]
+
+const user = User.build({});
+user.role; // => "MEMBER"
+user.roleText; // => "Member"
+```
+
+In the example of `user.role`, the following keys will be searched in order, and the first key found will be used:
+
+```
+enums.User.Role.MEMBER
+enums.defaults.Role.MEMBER
+enums.Role.MEMBER
+```
+
+## Related Links
+
+- [i18next](https://www.i18next.com/)
