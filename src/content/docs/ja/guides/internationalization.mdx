@@ -1,0 +1,191 @@
+---
+title: 国際化 (i18n)
+description: 国際化について
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Accellaでは[i18next](https://www.i18next.com/)を使って国際化をサポートしています。
+`src/config/locales/`ディレクトリ以下に翻訳ファイルを配置することで、モデル名、属性名、エラーメッセージ、Enumの値などを翻訳することができます。
+翻訳ファイルは、YAML、JSON、JavaScriptのいずれかの形式で以下の例のように記述することができます。
+
+<Tabs>
+  <TabItem label="YAML">
+```yml
+# src/config/locales/models/user/en.yml
+en:
+  translation:
+    accelrecord:
+      models:
+        User: "ユーザー"
+      attributes:
+        User:
+          firstName: "名"
+          lastName: "姓"
+```
+  </TabItem>
+  <TabItem label="JSON">
+```json
+# src/config/locales/models/user/en.json
+{
+  "en": {
+    "translation": {
+      "accelrecord": {
+        "models": {
+          "User": "ユーザー"
+        },
+        "attributes": {
+          "User": {
+            "firstName": "名",
+            "lastName": "姓"
+          }
+        }
+      }
+    }
+  }
+}
+```
+  </TabItem>
+  <TabItem label="JavaScript">
+```ts
+// src/config/locales/models/user/en.js
+export default {
+  en: {
+    translation: {
+      accelrecord: {
+        models: {
+          User: "ユーザー",
+        },
+        attributes: {
+          User: {
+            firstName: "名",
+            lastName: "姓",
+          },
+        },
+      },
+    },
+  },
+};
+```
+  </TabItem>
+</Tabs>
+
+デフォルトの言語などi18nextの設定を変更する場合は、`src/config/initializers/i18n.ts`での初期化処理を編集してください。
+
+## モデルの翻訳
+
+`Model.modelName.human`メソッドと`Model.humanAttributeName(attribute)`メソッドを使うことで、モデル名と属性名の翻訳を参照できます。
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+// accelrecord.models.User が参照される
+console.log(User.modelName.human); // => "ユーザー"
+// accelrecord.attributes.User.firstName が参照される
+console.log(User.humanAttributeName("firstName")); // => "名"
+```
+
+## エラーメッセージの翻訳
+
+バリデーションエラーメッセージも翻訳に対応しており、以下からエラーメッセージを参照します。
+
+```
+accelrecord.errors.models.[ModelName].attributes.[attribute].[messageKey]
+accelrecord.errors.models.[ModelName].[messageKey]
+accelrecord.errors.messages.[messageKey]
+errors.attributes.[attribute].[messageKey]
+errors.messages.[messageKey]
+```
+
+```ts
+// src/models/user.ts
+import { validates } from "accel-record/validations";
+import { ApplicationRecord } from "./applicationRecord.js";
+
+class UserModel extends ApplicationRecord {
+  static validations = validates(this, [["firstName", { presence: true }]]);
+}
+```
+
+上のUserModelの例では、``blank``というメッセージキーの翻訳がエラーメッセージに利用されます。
+
+この例では、以下のキーを順に探し、最初に見つかったキーが利用されます。
+
+```
+accelrecord.errors.models.User.attributes.name.blank
+accelrecord.errors.models.User.blank
+accelrecord.errors.messages.blank
+errors.attributes.name.blank
+errors.messages.blank
+```
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+const user = User.build({});
+user.validate();
+console.log(User.errors.fullMessages);
+// => ["名 を入力してください"]
+```
+
+各バリデーションに対応するメッセージキーは以下の通りです。
+
+| バリデーション | オプション | メッセージキー | 式展開 |
+| -------------- | ---------- | -------------- | ------ |
+| acceptance     | -          | accepted       | -      |
+| presence       | -          | blank          | -      |
+| length         | minimum    | tooShort       | count  |
+| length         | maximum    | tooLong        | count  |
+| uniqueness     | -          | taken          | -      |
+| format         | -          | invalid        | -      |
+| inclusion      | -          | inclusion      | -      |
+| numericality   | equalTo    | equalTo        | count  |
+
+式展開が `count` になっているものは、エラーメッセージに `{{count}}` を含むときにその部分がオプションで指定された値に置き換えられます。
+
+## Enumの翻訳
+
+Enumの各値に対しても翻訳を定義することができます。
+
+```ts
+// prisma/schema.prisma
+
+enum Role {
+  MEMBER
+  ADMIN
+}
+
+model User {
+  /* ... */
+  role Role @default(MEMBER)
+}
+```
+
+`User.role.options()`で、Enumの各値に対応する翻訳を取得することができます。
+各`User`が持つ`role`に対して、`roleText`というプロパティでEnumの値に対応する翻訳を取得することができます。
+
+```ts
+// src/sample.ts
+import { User } from "./models/index.js";
+
+User.role.options(); // => [["メンバー", "MEMBER"], ["管理者", "ADMIN"]]
+
+const user = User.build({});
+user.role; // => "MEMBER"
+user.roleText; // => "メンバー"
+```
+
+`user.role`の例では、以下のキーを順に探し、最初に見つかったキーが利用されます。
+
+```
+enums.User.Role.MEMBER
+enums.defaults.Role.MEMBER
+enums.Role.MEMBER
+```
+
+## 関連リンク
+
+- [i18next](https://www.i18next.com/)
+- [バリデーション](validation)
