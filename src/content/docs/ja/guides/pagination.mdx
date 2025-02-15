@@ -68,3 +68,38 @@ const { Nav, PageEntriesInfo } = paginate(Account.order("id", "desc"), { page, p
 
 ![Pagination UI with Bootstrap](https://github.com/user-attachments/assets/7c0dab8d-c22d-47ef-8e31-10eac12c8e06)
 
+
+## 国際化
+
+ページネーションの機能で出力される各テキストにも[国際化(I18n)](internationalization)を適用することができます。
+
+| キー          | デフォルト値 | 表示例 |
+| -------------- | ---------- | --- |
+| views.pagination.first | \&laquo; First | &laquo; First |
+| views.pagination.last | Last \&raquo; | Last &raquo; |
+| views.pagination.previous | \&lsaquo; Prev | &lsaquo; Prev |
+| views.pagination.next | Next \&rsaquo; | Next &rsaquo; |
+| views.pagination.truncate | \&hellip; | &hellip; |
+| helpers.pageEntriesInfo.onePage.displayEntries_zero | No entries found | No entries found |
+| helpers.pageEntriesInfo.onePage.displayEntries_other | Displaying <b>all \{total}</b> entries | Displaying <b>all 5</b> entries |
+| helpers.pageEntriesInfo.morePages.displayEntries | Displaying <b>\{first}&nbsp;-&nbsp;\{last}</b> of <b>\{total}</b> in total | Displaying <b>1-10</b> of <b>55</b> in total |
+
+日本語での設定例:
+
+```yml
+# src/config/locales/views/pagination/ja.yml
+ja:
+  translation:
+    views.pagination:
+      first: "&laquo; 最初"
+      last: "最後 &raquo;"
+      previous: "&lsaquo; 前"
+      next: "次 &rsaquo;"
+      truncate: "&hellip;"
+    helpers.pageEntriesInfo:
+      onePage:
+        displayEntries_zero: "レコードが見つかりませんでした"
+        displayEntries_other: "<b>全{{total}}</b>件表示中"
+      morePages:
+        displayEntries: "<b>{{first}}-{{last}}</b>件 / {{total}}件中"
+```

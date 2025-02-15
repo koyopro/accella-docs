@@ -68,3 +68,39 @@ The following styles will be applied when Bootstrap 5 is used. You can override 
 
 ![Pagination UI with Bootstrap](https://github.com/user-attachments/assets/7c0dab8d-c22d-47ef-8e31-10eac12c8e06)
 
+
+
+## Internationalization
+
+You can apply [internationalization (I18n)](internationalization) to the text output by the pagination feature.
+
+| Key          | Default Value | Example |
+| -------------- | ---------- | --- |
+| views.pagination.first | \&laquo; First | &laquo; First |
+| views.pagination.last | Last \&raquo; | Last &raquo; |
+| views.pagination.previous | \&lsaquo; Prev | &lsaquo; Prev |
+| views.pagination.next | Next \&rsaquo; | Next &rsaquo; |
+| views.pagination.truncate | \&hellip; | &hellip; |
+| helpers.pageEntriesInfo.onePage.displayEntries_zero | No entries found | No entries found |
+| helpers.pageEntriesInfo.onePage.displayEntries_other | Displaying <b>all \{total}</b> entries | Displaying <b>all 5</b> entries |
+| helpers.pageEntriesInfo.morePages.displayEntries | Displaying <b>\{first}&nbsp;-&nbsp;\{last}</b> of <b>\{total}</b> in total | Displaying <b>1-10</b> of <b>55</b> in total |
+
+Example settings:
+
+```yml
+# src/config/locales/views/pagination/en.yml
+en:
+  translation:
+    views.pagination:
+      first: "&laquo; First"
+      last: "Last &raquo;"
+      previous: "&lsaquo; Previous"
+      next: "Next &rsaquo;"
+      truncate: "&hellip;"
+    helpers.pageEntriesInfo:
+      onePage:
+        displayEntries_zero: "No entries found"
+        displayEntries_other: "Displaying <b>all {{total}}</b> entries"
+      morePages:
+        displayEntries: "Displaying <b>{{first}}-{{last}}</b> of <b>{{total}}</b> entries"
+```
