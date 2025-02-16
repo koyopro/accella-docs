@@ -3,41 +3,86 @@ title: 国際化 (i18n)
 description: 国際化について
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Accellaでは[i18next](https://www.i18next.com/)を使って国際化をサポートしています。
-`src/config/initializers/i18n.ts`にi18nextの初期化処理を記述できます。
+`src/config/locales/`ディレクトリ以下に翻訳ファイルを配置することで、モデル名、属性名、エラーメッセージ、Enumの値などを翻訳することができます。
+翻訳ファイルは、YAML、JSON、JavaScriptのいずれかの形式で以下の例のように記述することができます。
 
-
-## モデルの翻訳
-
-`Model.model_name.human`メソッドと`Model.human_attribute_name(attribute)`メソッドを使うことで、モデル名と属性名の翻訳を参照できます。
-
+<Tabs>
+  <TabItem label="YAML">
+```yml
+# src/config/locales/models/user/en.yml
+en:
+  translation:
+    accelrecord:
+      models:
+        User: "User"
+      attributes:
+        User:
+          firstName: "First Name"
+          lastName: "Last Name"
+```
+  </TabItem>
+  <TabItem label="JSON">
+```json
+# src/config/locales/models/user/en.json
+{
+  "en": {
+    "translation": {
+      "accelrecord": {
+        "models": {
+          "User": "User"
+        },
+        "attributes": {
+          "User": {
+            "firstName": "First Name",
+            "lastName": "Last Name"
+          }
+        }
+      }
+    }
+  }
+}
+```
+  </TabItem>
+  <TabItem label="JavaScript">
 ```ts
-// src/config/initializers/i18n.ts
-import i18next from "i18next";
-
-export default async () => {
-  await i18next.init({
-    lng: "ja",
-    resources: {
-      ja: {
-        translation: {
-          // モデル名
-          "accelrecord.models.User": "User",
-          // 属性名
-          "accelrecord.attributes.User.firstName": "First Name",
-          "accelrecord.attributes.User.lastName": "Last Name",
+// src/config/locales/models/user/en.js
+export default {
+  en: {
+    translation: {
+      accelrecord: {
+        models: {
+          User: "User",
+        },
+        attributes: {
+          User: {
+            firstName: "First Name",
+            lastName: "Last Name",
+          },
         },
       },
     },
-  });
+  },
 };
 ```
+  </TabItem>
+</Tabs>
+
+デフォルトの言語などi18nextの設定を変更する場合は、`src/config/initializers/i18n.ts`での初期化処理を編集してください。
+
+## モデルの翻訳
+
+`Model.modelName.human`メソッドと`Model.humanAttributeName(attribute)`メソッドを使うことで、モデル名と属性名の翻訳を参照できます。
 
 ```ts
 // src/sample.ts
 import { User } from "./models/index.js";
 
+// accelrecord.models.User が参照される
 console.log(User.modelName.human); // => "ユーザー"
+// accelrecord.attributes.User.firstName が参照される
 console.log(User.humanAttributeName("firstName")); // => "名"
 ```
 
