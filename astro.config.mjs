@@ -36,6 +36,7 @@ export default defineConfig({
         {
           label: "Guides",
           items: [
+            "guides/validation",
             "guides/session",
             "guides/pagination",
             "guides/form_and_parameters",
