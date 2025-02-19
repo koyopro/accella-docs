@@ -1,0 +1,54 @@
+---
+import { paginate, searchFormFor } from "accel-web";
+import { User } from "src/models";
+import Layout from "../../layouts/Layout.astro";
+
+const { params } = Astro.locals;
+const page = Number(params.p) || 1;
+
+// Model.search() returns a search object.
+// params.q is a search query object from query parameters.
+// Example:
+//  Path like "/todos?q.id_eq=1&q.title_cont=foo" is parsed as follows:
+//  { q: { id_eq: 1, title_cont: "foo" } }
+const search = User.search(params.q);
+// searchFormFor() returns form fields for search.
+const { NumberField, TextField } = searchFormFor(search);
+
+const { Nav, PageEntriesInfo, records } = paginate(
+  search.result().order("id", "desc"),
+  { page }
+);
+---
+
+<Layout>
+  <h2>Search Users</h2>
+  <!-- Search form -->
+  <form method="get">
+    <div>
+      <!-- Search by exact ID match -->
+      <NumberField attr="id_eq" placeholder="Search by ID" />
+    </div>
+    <div>
+      <!-- Search by partial title match -->
+      <TextField attr="title_cont" placeholder="Search by Title" />
+    </div>
+    <div>
+      <button type="submit">Search</button>
+      <a href="/users">Clear</a>
+    </div>
+  </form>
+  <ul>
+    {
+      records.map((user) => (
+        <li>
+          <span>{user.id}</span>
+          <span>{user.email}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <!-- Pagination -->
+  <div><Nav /></div>
+  <div><PageEntriesInfo /></div>
+</Layout>
