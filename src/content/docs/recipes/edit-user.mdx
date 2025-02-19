@@ -1,0 +1,17 @@
+---
+title: Sample User Edit Page
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/[id]/edit.astro?raw'
+
+This is a sample page that displays the user edit page with `GET /users/[id]/edit` and updates user information with `POST /users/[id]/edit`.
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/[id]/edit.astro" />
+
+## Related Links
+
+- [Validation](../guides/validation)
+- [Form and Request Parameters](../guides/form_and_parameters)
+- [CSRF Protection](../guides/csrf_protection)
+

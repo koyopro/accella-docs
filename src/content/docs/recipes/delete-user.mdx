@@ -1,0 +1,16 @@
+---
+title: Sample User Deletion Page
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/[id]/delete.astro?raw'
+
+This is a sample page that displays a user deletion confirmation page with `GET /users/[id]/delete` and deletes the user with `POST /users/[id]/delete`.
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/[id]/delete.astro" />
+
+## Related Links
+
+- [Form and Request Parameters](../guides/form_and_parameters)
+- [CSRF Protection](../guides/csrf_protection)
+

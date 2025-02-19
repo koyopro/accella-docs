@@ -1,0 +1,38 @@
+---
+import { paginate } from "accel-web";
+import { User } from "src/models";
+import Layout from "../layouts/Layout.astro";
+
+const page = Number(Astro.locals.params.p) || 1;
+const pager = paginate(User.order('id', 'desc'), {
+  page,
+  per: 10,
+  window: 2,
+});
+const { Nav, PageEntriesInfo } = pager;
+---
+
+<Layout>
+  <h2>User List</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        pager.records.map((user) => (
+          <tr>
+            <td>{user.id}</td>
+            <td>{user.email}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  <!-- Pagination -->
+  <div><Nav /></div>
+  <div><PageEntriesInfo /></div>
+</Layout>

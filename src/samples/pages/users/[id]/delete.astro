@@ -1,0 +1,29 @@
+---
+import { formFor } from "accel-web";
+import Layout from "src/layouts/Layout.astro";
+import { User } from "src/models";
+
+// Retrieve the user by id
+// If the user does not exist, a RecordNotFound error is thrown and a 404 page is displayed
+const user = User.find(Astro.params.id);
+
+if (Astro.request.method === "POST") {
+  user.destroy();
+  return Astro.redirect("/users");
+}
+const f = formFor(user);
+const { Form, Submit } = f;
+---
+
+<Layout>
+  <h2>Delete User</h2>
+  <Form method="post">
+    <div>
+      <b>{user.email}</b> will be deleted. Are you sure?
+    </div>
+    <div>
+      <Submit>Delete</Submit>
+      <a href="/users">Cancel</a>
+    </div>
+  </Form>
+</Layout>

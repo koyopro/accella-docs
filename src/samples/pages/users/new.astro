@@ -1,0 +1,44 @@
+---
+import { formFor } from "accel-web";
+import Layout from "src/layouts/Layout.astro";
+import { User } from "src/models";
+
+const user = User.build({})
+
+if (Astro.request.method === "POST") {
+  const { params } = Astro.locals;
+  // Reflect the email column
+  if (user.update(params.require("user").permit("email"))) {
+    // Redirect to the user list page if creation is successful
+    return Astro.redirect("/users");
+  }
+  // Continue displaying the page if creation fails,
+  // and show information from user.errors (such as validation error messages)
+}
+const f = formFor(user);
+const { Form, Label, TextField, Submit } = f;
+---
+
+<Layout>
+  <h2>New User</h2>
+  <Form method="post">
+    {
+      user.errors.fullMessages.length > 0 && (
+        <div role="alert">
+          {user.errors.fullMessages.map((message) => (
+            <div>{message}</div>
+          ))}
+        </div>
+      )
+    }
+    <div>
+      <Label for="email" />
+      <!-- The value of the TextField will reflect the content of user.email -->
+      <TextField attr="email" />
+    </div>
+    <div>
+      <Submit>Create</Submit>
+      <a href="/users">Cancel</a>
+    </div>
+  </Form>
+</Layout>

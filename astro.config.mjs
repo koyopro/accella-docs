@@ -43,6 +43,16 @@ export default defineConfig({
             "guides/csrf_protection",
           ],
         },
+        {
+          label: "Recipes",
+          items: [
+            "recipes/list-users",
+            "recipes/new-user",
+            "recipes/show-user",
+            "recipes/edit-user",
+            "recipes/delete-user",
+          ],
+        }
         // {
         // 	label: 'Reference',
         // 	autogenerate: { directory: 'reference' },
