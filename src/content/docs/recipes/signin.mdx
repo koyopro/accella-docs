@@ -1,0 +1,24 @@
+---
+title: Sample Sign In Page
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/signin.astro?raw'
+import middlewareCode from '/src/samples/middleware.ts?raw'
+import formCode from '/src/samples/forms/signIn.ts?raw'
+
+`GET /signin` でログインページを表示し、`POST /signin` でログイン処理を行うサンプルです。
+
+<Code code={middlewareCode} lang="ts" title="src/middleware.ts" />
+<Code code={formCode} lang="ts" title="src/forms/signIn.ts" />
+<Code code={sampleCode} lang="astro" title="src/pages/signin.astro" />
+
+## Related Links
+
+- [Middleware](https://docs.astro.build/en/guides/middleware/)(Astro Docs)
+- [Session Management](../guides/session)
+- [Creating Models](../guides/models)
+- [Pagination](../guides/pagination)
+- [Form and Request Parameters](../guides/form_and_parameters)
+- [CSRF Protection](../guides/csrf_protection)
+

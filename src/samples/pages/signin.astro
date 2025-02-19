@@ -1,0 +1,53 @@
+---
+import { formFor } from "accel-web";
+import { SignIn } from "../forms/signIn";
+import Layout from "../layouts/Layout.astro";
+
+const { session, params } = Astro.locals;
+
+if (session.user) return Astro.redirect("/");
+
+const signIn = SignIn.build({});
+const messages: string[] = [];
+
+if (Astro.request.method === "POST") {
+  const sinInParams = params.require("signIn").permit("email", "password");
+  signIn.assignAttributes(sinInParams);
+
+  const user = signIn.authenticate();
+  if (user) {
+    session.user = user;
+    return Astro.redirect("/");
+  }
+  messages.push("The email address or password is incorrect");
+}
+
+const { Form, Submit, Label, TextField, PasswordField } = formFor(signIn);
+---
+
+<Layout title="Sign In">
+  <h2>Sign In</h2>
+  <Form method="post">
+    {
+      messages.length > 0 && (
+        <div>
+          {messages.map((message) => (
+            <div>{message}</div>
+          ))}
+        </div>
+      )
+    }
+    <div>
+      <Label for="email" />
+      <TextField attr="email" />
+    </div>
+    <div>
+      <Label for="password" />
+      <PasswordField attr="password" />
+    </div>
+    <div>
+      <Submit>Sign In</Submit>
+      <a href="/signup">Go to Sign Up</a>
+    </div>
+  </Form>
+</Layout>
