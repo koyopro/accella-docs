@@ -1,0 +1,21 @@
+---
+title: ログインページのサンプル
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/signin.astro?raw'
+import formCode from '/src/samples/forms/signIn.ts?raw'
+
+`GET /signin` でログインページを表示し、`POST /signin` でログイン処理を行うサンプルです。
+既にログイン済みの場合はユーザーの情報を表示し、未ログインの場合はフォームを表示します。
+
+<Code code={sampleCode} lang="astro" title="src/pages/signin.astro" />
+<Code code={formCode} lang="ts" title="src/forms/signIn.ts" />
+
+## Related Links
+
+- [セッション管理](../guides/session)
+- [フォームとリクエストパラメータ](../guides/form_and_parameters)
+- [Formオブジェクト](../guides/form-objects)
+- [パスワード認証](../guides/password-authentication)
+

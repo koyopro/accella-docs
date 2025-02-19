@@ -56,6 +56,7 @@ export default defineConfig({
             "recipes/edit-user",
             "recipes/delete-user",
             "recipes/search-users",
+            "recipes/signin",
           ],
         }
         // {
