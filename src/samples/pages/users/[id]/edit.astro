@@ -1,0 +1,46 @@
+---
+import { formFor } from "accel-web";
+import Layout from "src/layouts/Layout.astro";
+import { User } from "src/models";
+
+// Retrieve the user by id
+// If the user does not exist, a RecordNotFound error is thrown and a 404 page is displayed
+const user = User.find(Astro.params.id);
+
+if (Astro.request.method === "POST") {
+  const { params } = Astro.locals;
+  // Update the email column
+  if (user.update(params.require("user").permit("email"))) {
+    // Redirect to the user list page if the update is successful
+    return Astro.redirect("/users");
+  }
+  // If the update fails, continue rendering the page and display
+  // the validation error messages from user.errors
+}
+const f = formFor(user);
+const { Form, Label, TextField, Submit } = f;
+---
+
+<Layout>
+  <h2>Edit User</h2>
+  <Form method="post">
+    {
+      user.errors.fullMessages.length > 0 && (
+        <div role="alert">
+          {user.errors.fullMessages.map((message) => (
+            <div>{message}</div>
+          ))}
+        </div>
+      )
+    }
+    <div>
+      <Label for="email" />
+      <!-- The value of the TextField will reflect the content of user.email -->
+      <TextField attr="email" />
+    </div>
+    <div>
+      <Submit>Update</Submit>
+      <a href="/users">Cancel</a>
+    </div>
+  </Form>
+</Layout>

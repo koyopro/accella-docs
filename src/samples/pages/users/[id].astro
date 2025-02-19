@@ -1,0 +1,16 @@
+---
+import Layout from "src/layouts/Layout.astro";
+import { User } from "src/models";
+
+// Retrieve the user by id
+// If the user does not exist, a RecordNotFound error is thrown and a 404 page is displayed
+const user = User.find(Astro.params.id);
+---
+
+<Layout>
+  <h2>Show User</h2>
+  <div>
+    <div>ID: {user.id}</div>
+    <div>Email: {user.email}</div>
+  </div>
+</Layout>

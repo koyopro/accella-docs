@@ -1,0 +1,15 @@
+---
+title: ユーザーリストページのサンプル
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/index.astro?raw'
+
+`GET /users` でユーザーリストページを表示するサンプルです。
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/index.astro" />
+
+## 関連リンク
+
+- [モデルの作成](../guides/models)
+- [ページネーション](../guides/pagination)

@@ -1,0 +1,17 @@
+---
+title: Sample User Creation Page
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/new.astro?raw'
+
+This is a sample page for displaying the user creation page with `GET /users/new` and executing user creation with `POST /users/new`.
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/new.astro" />
+
+## Related Links
+
+- [Validation](../guides/validation)
+- [Form and Request Parameters](../guides/form_and_parameters)
+- [CSRF Protection](../guides/csrf_protection)
+

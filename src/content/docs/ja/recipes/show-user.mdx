@@ -1,0 +1,10 @@
+---
+title: ユーザー詳細ページのサンプル
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/[id].astro?raw'
+
+`GET /users/[id]` でユーザー詳細ページを表示するサンプルです。
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/[id].astro" />

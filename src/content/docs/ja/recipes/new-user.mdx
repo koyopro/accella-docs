@@ -1,0 +1,16 @@
+---
+title: ユーザー作成ページのサンプル
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/new.astro?raw'
+
+`GET /users/new` でユーザー作成ページを表示し、`POST /users/new` でユーザー作成を実行するページのサンプルです。
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/new.astro" />
+
+## 関連リンク
+
+- [バリデーション](../guides/validation)
+- [フォームとリクエストパラメータ](../guides/form_and_parameters)
+- [CSRF対策](../guides/csrf_protection)

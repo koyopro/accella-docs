@@ -1,0 +1,16 @@
+---
+title: ユーザー編集ページのサンプル
+---
+
+import { Code } from '@astrojs/starlight/components';
+import sampleCode from '/src/samples/pages/users/[id]/edit.astro?raw'
+
+`GET /users/[id]/edit` でユーザー編集ページを表示し、`POST /users/[id]/edit` でユーザー情報を更新するページのサンプルです。
+
+<Code code={sampleCode} lang="astro" title="src/pages/users/[id]/edit.astro" />
+
+## 関連リンク
+
+- [バリデーション](../guides/validation)
+- [フォームとリクエストパラメータ](../guides/form_and_parameters)
+- [CSRF対策](../guides/csrf_protection)
