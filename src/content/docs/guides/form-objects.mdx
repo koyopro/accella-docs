@@ -1,0 +1,48 @@
+---
+title: Form Objects
+---
+
+Form objects are a design pattern that allows you to separate validation and saving logic from regular models. They are used for handling processes that span multiple models or for handling form processing that doesn't correspond to regular models.
+By inheriting from the `FormModel` class, you can define attributes and perform validations just like regular models, even though the form object is not directly related to a database table.
+
+```ts
+// src/forms/myForm.ts
+import { FormModel } from "accel-record";
+import { attributes } from "accel-record/attributes";
+import { validates } from "accel-record/validations";
+
+class MyForm extends FormModel {
+  title = attributes.string();
+  priority = attributes.integer(3);
+  dueDate = attributes.date();
+
+  static validations = validates(this, [
+    ["title", { presence: true }],
+    ["priority", { numericality: { between: [1, 5] } }],
+  ]);
+
+  save() {
+    if (this.isInvalid()) return false;
+
+    // Perform actions when validation succeeds
+    // Save values to models, etc.
+    // ...
+    return true;
+  }
+}
+```
+
+```ts
+// Receive form input values
+const myFormParams = { title: "Task", priority: "2", dueDate: "2022-12-31" };
+const form = MyForm.build(myFormParams);
+if (form.save()) {
+  // Actions to take on successful save
+  /* ... */
+} else {
+  // Actions to take on save failure
+  const errorMessages = form.errors.fullMessages();
+  // Display error messages, etc.
+  /* ... */
+}
+```
