@@ -32,6 +32,7 @@ export default defineConfig({
             "guides/models",
             "guides/add-page",
             "guides/testing",
+            "guides/deploy",
           ],
         },
         {
