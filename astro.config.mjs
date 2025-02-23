@@ -24,7 +24,7 @@ export default defineConfig({
       },
       sidebar: [
         {
-          label: "Start a new project",
+          label: "Start a New Project",
           items: [
             "guides/installation",
             "guides/project-structure",
@@ -58,6 +58,12 @@ export default defineConfig({
             "recipes/delete-user",
             "recipes/search-users",
             "recipes/signin",
+          ],
+        },
+        {
+          label: "Topics on Types",
+          items: [
+            "guides/model-types",
           ],
         }
         // {
