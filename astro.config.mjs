@@ -77,6 +77,7 @@ export default defineConfig({
           items: [
             "guides/model-types",
             "guides/prisma-schema-and-field-types",
+            "guides/type-safe-template-rendering",
           ],
         }
         // {
