@@ -1,0 +1,121 @@
+---
+title: Prisma Schema and Field Types
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+Accel Record uses Prisma for schema definition, and the support status for each feature is as follows:
+
+| Feature                         | Notation    | Support |
+| ------------------------------- | ----------- | ------- |
+| ID                              | @id         | ✅      |
+| Multi-field ID (Composite ID)   | @@id        | ✅      |
+| Table name mapping              | @@map       | ✅      |
+| Column name mapping             | @map        | ✅      |
+| Default value                   | @default    | ✅      |
+| Updated at                      | @updatedAt  | ✅      |
+| List                            | []          | ✅      |
+| Optional                        | ?           | ✅      |
+| Relation field                  |             | ✅      |
+| Implicit many-to-many relations |             | ✅      |
+| Enums                           | enum        | ✅      |
+| Unsupported type                | Unsupported | -       |
+
+The types of NewModel and PersistedModel differ depending on whether the field type is required or optional.
+
+| Type           | NewModel | PersistedModel  |
+| -------------- | -------- | --------------- |
+| Required Field | Nullable | **NonNullable** |
+| Optional Field | Nullable | Nullable        |
+
+In addition, the types of NewModel and PersistedModel differ depending on how the default value is specified.
+
+| Argument        | NewModel        | PersistedModel  |
+| --------------- | --------------- | --------------- |
+| Static value    | **NonNullable** | **NonNullable** |
+| autoincrement() | Nullable        | **NonNullable** |
+| now()           | Nullable        | **NonNullable** |
+| dbgenerated()   | Nullable        | **NonNullable** |
+| uuid()          | **NonNullable** | **NonNullable** |
+| cuid()          | **NonNullable** | **NonNullable** |
+
+Here are examples of model definitions and their corresponding NewModel and PersistedModel:
+
+<Code code={`model Sample {
+    id         Int      @id @default(autoincrement())
+    required   Int
+    optional   String?
+    hasDefault Boolean  @default(false)
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    uuid       String   @default(uuid())
+    cuid       String   @default(cuid())
+}`} lang="prisma" title="prisma/schema.prisma" />
+
+```ts
+// NewModel
+interface NewSample {
+  id: number | undefined;
+  required: number | undefined;
+  optional: string | undefined;
+  hasDefault: boolean;
+  createdAt: Date | undefined;
+  updatedAt: Date | undefined;
+  uuid: string;
+  cuid: string;
+}
+
+// PersistedModel
+interface Sample {
+  id: number;
+  required: number;
+  optional: string | undefined;
+  hasDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  uuid: string;
+  cuid: string;
+}
+```
+
+## Type of Json Field
+
+When defining a Json type in a typical Prisma schema, you cannot specify strict types.
+
+<Code code={`model Sample {
+    id   Int  @id @default(autoincrement())
+    data Json // you don't have strict type for Json field
+}`} lang="prisma" title="db/schema/main.prisma" />
+
+With Accel Record, you can specify the type for Json fields in the BaseModel. \
+In this case, you can handle Json fields in a type-safe manner for both reading and writing.
+
+```ts
+// src/models/sample.ts
+import { ApplicationRecord } from "./applicationRecord.js";
+
+export class SampleModel extends ApplicationRecord {
+  // You can specify the type for Json fields in the BaseModel
+  data: { myKey1: string; myKey2: number } | undefined = undefined;
+}
+```
+
+```ts
+import { Sample } from "./models/index.js";
+
+const sample = Sample.build({});
+
+// OK
+sample.data = { myKey1: "value1", myKey2: 123 };
+
+// Type Error !
+sample.data = { foo: "value1" };
+// => Type '{ foo: string; }' is not assignable to type '{ myKey1: string; myKey2: number; } | undefined'.
+
+// OK
+console.log(sample.data?.myKey1);
+
+// Type Error !
+console.log(sample.data?.foo);
+// => Property 'foo' does not exist on type '{ myKey1: string; myKey2: number; } | undefined'.
+```

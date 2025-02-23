@@ -64,7 +64,7 @@ export default defineConfig({
           label: "Topics on Types",
           items: [
             "guides/model-types",
-            "guides/type-of-json-field",
+            "guides/prisma-schema-and-field-types",
           ],
         }
         // {
