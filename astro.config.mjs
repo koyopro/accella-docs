@@ -25,6 +25,9 @@ export default defineConfig({
       sidebar: [
         {
           label: "Start a New Project",
+          translations: {
+            'ja': '新しいプロジェクトを始める'
+          },
           items: [
             "guides/installation",
             "guides/project-structure",
@@ -37,6 +40,9 @@ export default defineConfig({
         },
         {
           label: "Guides",
+          translations: {
+            'ja': 'ガイド'
+          },
           items: [
             "guides/validation",
             "guides/flexible-search",
@@ -50,6 +56,9 @@ export default defineConfig({
         },
         {
           label: "Recipes",
+          translations: {
+            'ja': 'レシピ'
+          },
           items: [
             "recipes/list-users",
             "recipes/new-user",
@@ -62,6 +71,9 @@ export default defineConfig({
         },
         {
           label: "Topics on Types",
+          translations: {
+            'ja': '型に関するトピック'
+          },
           items: [
             "guides/model-types",
             "guides/prisma-schema-and-field-types",
