@@ -24,6 +24,13 @@ export default defineConfig({
       },
       sidebar: [
         {
+          label: "Introduction",
+          translations: {
+            'ja': 'はじめに'
+          },
+          items: ["introduction/why-accella"],
+        },
+        {
           label: "Start a New Project",
           translations: {
             'ja': '新しいプロジェクトを始める'

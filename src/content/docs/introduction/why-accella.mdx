@@ -1,0 +1,45 @@
+---
+title: Why Use Accella
+---
+
+Accella is designed to reduce the burden on developers and make web application development more efficient. Here are some key features of Accella that help maintain high development efficiency.
+
+## 1. Full Stack
+
+In traditional server-side web application development, full-stack MVC frameworks like Ruby on Rails, Laravel, and Django are often used. These frameworks provide many features frequently used in web application development, centered around the Model-View-Controller pattern, which helps streamline product development.
+
+Accella incorporates many features inspired by these frameworks, allowing you to implement common functionalities with minimal code by simply calling the framework's functions. Examples include CRUD operations for tables, validation, session management, password authentication, advanced search, form building, request parameter parsing, pagination, multilingual support, and security.
+
+Notably, Accella's design emphasizes an ORM (Object-Relational Mapping) library, Accel Record, which follows the Active Record pattern and was developed specifically for Accella.
+
+These rich features allow you to focus on implementing unique functionalities and advancing your web application development.
+
+## 2. Rapid Feedback Through Typing
+
+Type safety in programming languages is crucial for maintaining high development efficiency, especially as the amount of source code increases. Developing with statically typed languages allows you to detect issues before running the program, leading to faster creation of correct code. It also makes refactoring safer and reduces the points that need to be covered by automated tests, making it easier to maintain product quality.
+
+Recently, type-safe development with TypeScript has become widespread in web application development, especially on the frontend, and this trend is extending to server-side development as well. While dynamically typed languages like Ruby, PHP, and Python are often used for server-side development, statically typed languages are superior in terms of type safety.
+
+Accella was born from the idea of creating a framework that combines the safety of statically typed languages with the rich features of traditional full-stack frameworks, aiming to achieve more efficient web application development.
+
+Accella provides type-safe template rendering using Astro components, which is not available in other server-side frameworks. With TypeScript's type safety, Accella ensures high development efficiency, including debugging and refactoring.
+
+## 3. Simple Architecture
+
+Frontend frameworks like Next.js and Nuxt are designed around client-side rendering for SPAs (Single Page Applications). In SPAs, you need to consider data flow between the browser and the server, which adds complexity to the application. Even if the framework's features hide this complexity, the underlying complexity remains.
+
+Accella, on the other hand, is designed based on MPA (Multi-Page Application) architecture, similar to traditional server-side frameworks like Rails, Django, Express, and Laravel.
+
+Unless SPA architecture is absolutely necessary, adopting an MPA architecture generally reduces the complexity of the product. In an MPA, you don't need to provide separate server-side APIs and frontend applications like in an SPA. The server-side assembles HTML and returns it to the browser, resulting in a simpler architecture with fewer considerations during implementation and infrastructure design compared to an SPA.
+
+The simpler the architecture, the easier it is to implement, debug, and test, reducing the burden on developers.
+
+## 4. Integration with Frontend Frameworks
+
+The features mentioned so far could potentially be achieved with frameworks in other statically typed languages like Java. However, the final reason to use Accella is its integration with frontend frameworks.
+
+Even when developing web applications with a server-side-centric architecture, there are often functionalities you want to run in the browser. Currently, frontend processing in the browser is mainly developed using frameworks like React and Vue.js with TypeScript.
+
+Accella allows you to unify both server-side and frontend development using a single language, TypeScript. This reduces the burden on developers that arises from using multiple programming languages.
+
+Additionally, Accella leverages Astro's capabilities to flexibly integrate and collaborate with frontend frameworks. This allows you to return pre-rendered HTML to the browser by default while seamlessly developing functionalities that need to run in the browser.
