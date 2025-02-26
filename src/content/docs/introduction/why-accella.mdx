@@ -22,7 +22,7 @@ Recently, type-safe development with TypeScript has become widespread in web app
 
 Accella was born from the idea of creating a framework that combines the safety of statically typed languages with the rich features of traditional full-stack frameworks, aiming to achieve more efficient web application development.
 
-Accella provides type-safe template rendering using Astro components, which is not available in other server-side frameworks. With TypeScript's type safety, Accella ensures high development efficiency, including debugging and refactoring.
+Accella provides [type-safe template rendering](../guides/type-safe-template-rendering) using Astro components, which is not available in other server-side frameworks. With TypeScript's type safety, Accella ensures high development efficiency, including debugging and refactoring.
 
 ## 3. Simple Architecture
 
@@ -43,3 +43,23 @@ Even when developing web applications with a server-side-centric architecture, t
 Accella allows you to unify both server-side and frontend development using a single language, TypeScript. This reduces the burden on developers that arises from using multiple programming languages.
 
 Additionally, Accella leverages Astro's capabilities to flexibly integrate and collaborate with frontend frameworks. This allows you to return pre-rendered HTML to the browser by default while seamlessly developing functionalities that need to run in the browser.
+
+## Comparison with Other Frameworks
+
+Here, we compare Accella with three types of frameworks, highlighting their similarities and differences.
+
+1. Frontend Frameworks: Next.js, Nuxt, Remix, etc.
+2. Server-Side Frameworks for JavaScript/TypeScript: Express, NestJS, etc.
+3. Full-Stack Frameworks in Other Languages: Ruby on Rails, Django, Laravel, etc.
+
+| Feature \ FW             | Accella        | 1. Next.js, Nuxt, Remix | 2. Express, NestJS | 3. Rails, Django, Laravel |
+|--------------------------|----------------|-------------------------|-------------------|--------------------------|
+| Architecture Focus       | Server         | Frontend                | Server            | Server                   |
+| Type Safety (Language)   | ✅              | ✅                      | ✅                | ❔️                        |
+| Type Safety (Rendering)  | ✅              | ✅                      | ❌                | ❌                        |
+| ORM Integration          | ✅              | ❌                      | ❌                | ✅                        |
+
+Details for each item are described in the respective sections of this page.
+- Architecture Focus: [3. Simple Architecture](#3-simple-architecture)
+- Type Safety (Language/Rendering): [2. Rapid Feedback Through Typing](#2-rapid-feedback-through-typing)
+- ORM Integration: [1. Full Stack](#1-full-stack)
