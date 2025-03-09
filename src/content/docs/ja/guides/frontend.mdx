@@ -1,0 +1,73 @@
+---
+title: フロントエンドとの連携
+---
+
+
+## フレームワークコンポーネント
+
+Accellaはサーバーサイド中心のフレームワークですが、Astroの機能を利用することで、ReactやVue、Svelteといったフロントエンドフレームワークと柔軟に連携することができます。
+導入手順や利用方法の詳細は、[Astro Docsのフレームワークコンポーネント](https://docs.astro.build/ja/guides/framework-components/)ページを参照してください。
+
+以下に簡単な利用例を示します。
+
+```astro
+---
+// src/pages/framework-components.astro
+import MyReactComponent from '../components/MyReactComponent.jsx';
+import InteractiveButton from '../components/InteractiveButton.jsx';
+---
+<html>
+  <body>
+    <!-- Astroコンポーネントの中でReactコンポーネントを直接記述できます -->
+    <MyReactComponent />
+
+    <!-- フロントエンドで動作させたいコンポーネントにはclient:* ディレクティブを指定します -->
+    <InteractiveButton client:load />
+  </body>
+</html>
+```
+
+## API連携
+
+フレームワークコンポーネントとやりとりするためのAPIをサーバーサイドに用意したい場合は、AstroのActionsを使うことで実現できます。
+Actionsを使うことで、型安全にAPIの呼び出しや結果の取得ができるため、独自にAPIエンドポイント（JSON形式のREST APIなど）を作成するよりも推奨されます。  
+詳細な利用方法については、[Astro DocsのActions](https://docs.astro.build/guides/actions/)ページを参照してください。
+
+以下に簡単な利用例を示します。
+
+**Actionの定義**
+
+```ts
+// src/actions/index.ts
+import { defineAction } from 'astro:actions';
+import { z } from 'astro:schema';
+
+export const server = {
+  getGreeting: defineAction({
+    input: z.object({
+      name: z.string(),
+    }),
+    handler: async (input) => {
+      return `Hello, ${input.name}!`
+    }
+  })
+}
+```
+
+**Astroページでの利用**
+
+```astro
+// src/pages/index.astro
+<button>Get greeting</button>
+
+<script>
+import { actions } from 'astro:actions';
+
+const button = document.querySelector('button');
+button?.addEventListener('click', async () => {
+  // Show alert pop-up with greeting from action
+  const { data, error } = await actions.getGreeting({ name: "Accella" });
+  if (!error) alert(data);
+})
+</script>
+```

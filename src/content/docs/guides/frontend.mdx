@@ -1,0 +1,69 @@
+---
+title: Integration with Frontend
+---
+
+## Framework Components
+
+Accella is primarily a server-side framework, but by using Astro's features, you can seamlessly integrate with frontend frameworks like React, Vue, and Svelte. For detailed instructions and usage, refer to the [Astro Docs on Front-end frameworks](https://docs.astro.build/guides/framework-components/).
+
+Here is a simple example:
+
+```astro
+---
+// src/pages/framework-components.astro
+import MyReactComponent from '../components/MyReactComponent.jsx';
+import InteractiveButton from '../components/InteractiveButton.jsx';
+---
+<html>
+  <body>
+    <!-- You can directly include React components within Astro components -->
+    <MyReactComponent />
+
+    <!-- Use the client:* directive for components that need to run on the frontend -->
+    <InteractiveButton client:load />
+  </body>
+</html>
+```
+
+## API Integration
+
+If you want to set up an API on the server-side to interact with framework components, you can use Astro's Actions. Actions provide type-safe handling of calls and results, making them a recommended alternative to creating custom API endpoints (such as JSON-based REST APIs). For detailed usage, refer to the [Astro Docs on Actions](https://docs.astro.build/guides/actions/).
+
+Here is a simple example:
+
+**Defining an Action**
+
+```ts
+// src/actions/index.ts
+import { defineAction } from 'astro:actions';
+import { z } from 'astro:schema';
+
+export const server = {
+  getGreeting: defineAction({
+    input: z.object({
+      name: z.string(),
+    }),
+    handler: async (input) => {
+      return `Hello, ${input.name}!`
+    }
+  })
+}
+```
+
+**Using in an Astro Page**
+
+```astro
+// src/pages/index.astro
+<button>Get greeting</button>
+
+<script>
+import { actions } from 'astro:actions';
+
+const button = document.querySelector('button');
+button?.addEventListener('click', async () => {
+  // Show alert pop-up with greeting from action
+  const { data, error } = await actions.getGreeting({ name: "Accella" });
+  if (!error) alert(data);
+})
+</script>
+```

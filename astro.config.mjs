@@ -60,6 +60,7 @@ export default defineConfig({
             "guides/csrf_protection",
             "guides/password-authentication",
             "guides/form-objects",
+            "guides/frontend",
           ],
         },
         {
