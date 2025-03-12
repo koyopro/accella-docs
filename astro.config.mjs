@@ -28,7 +28,7 @@ export default defineConfig({
           translations: {
             'ja': 'はじめに'
           },
-          items: ["introduction/why-accella"],
+          items: ["introduction/why-accella", "introduction/code-overview"],
         },
         {
           label: "Start a New Project",

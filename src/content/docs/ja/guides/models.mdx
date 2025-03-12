@@ -4,6 +4,7 @@ description: モデルの作成方法とクラスの利用方法について説�
 ---
 
 import { Code, Steps } from '@astrojs/starlight/components';
+import sampleCrudCode from '/src/samples/crud.ts?raw';
 
 このページでは、モデルの追加方法と、モデルに対応するクラスの利用方法について説明します。
 Accellaでは、テーブル定義とマイグレーションにPrismaを、ORMにAccel Recordを使用しています。
@@ -46,34 +47,7 @@ Accellaでは、テーブル定義とマイグレーションにPrismaを、ORM�
 上記の例では、Userモデルに対応したUserクラスが生成されます。
 以下は、Userクラスを利用してCRUD処理を行うTypeScriptでのサンプルコードです。
 
-```typescript
-import { User } from "src/models/index.js";
-
-// Create a new user
-const user: User = User.create({
-  firstName: "John",
-  lastName: "Doe",
-});
-
-// Update the user
-user.update({
-  age: 26,
-});
-
-// Get all users
-for (const user of User.all()) {
-  console.log(user.firstName);
-}
-
-// Find a user
-const john: User | undefined = User.findBy({
-  firstName: "John",
-  lastName: "Doe",
-});
-
-// Delete the user
-john.delete();
-```
+<Code code={sampleCrudCode} lang="ts" />
 
 ## モデルに対応するクラスの拡張
 

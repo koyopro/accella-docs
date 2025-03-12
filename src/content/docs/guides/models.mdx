@@ -4,6 +4,7 @@ description: Project structure of an Accella project
 ---
 
 import { Code, Steps } from '@astrojs/starlight/components';
+import sampleCrudCode from '/src/samples/crud.ts?raw';
 
 This page explains how to add models and use the corresponding classes.
 In Accella, Prisma is used for table definitions and migrations, and Accel Record is used as the ORM.
@@ -46,34 +47,7 @@ You can import and use the classes corresponding to each model from `src/models/
 In the example above, a User class corresponding to the User model is generated.
 Below is a sample TypeScript code for performing CRUD operations using the User class.
 
-```typescript
-import { User } from "src/models/index.js";
-
-// Create a new user
-const user: User = User.create({
-  firstName: "John",
-  lastName: "Doe",
-});
-
-// Update the user
-user.update({
-  age: 26,
-});
-
-// Get all users
-for (const user of User.all()) {
-  console.log(user.firstName);
-}
-
-// Find a user
-const john: User | undefined = User.findBy({
-  firstName: "John",
-  lastName: "Doe",
-});
-
-// Delete the user
-john.delete();
-```
+<Code code={sampleCrudCode} lang="ts" />
 
 ## Extending the Class Corresponding to a Model
 

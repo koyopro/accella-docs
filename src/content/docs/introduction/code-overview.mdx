@@ -1,0 +1,91 @@
+---
+title: Code Overview
+---
+
+import { Code, Steps, TabItem, Tabs } from '@astrojs/starlight/components';
+import sampleCrudCode from '/src/samples/crud.ts?raw';
+import sampleEditCode from '/src/samples/pages/users/[id]/edit.astro?raw';
+import sampleListCode from '/src/samples/pages/users/index.astro?raw';
+
+This document provides a brief overview of the code used to create a web application with a database using Accella.
+
+## Table Definition
+
+We use Prisma's schema for defining database tables and migrations. Based on the defined table information, migration files can be generated.
+
+<Code code={`model User {
+    id        Int    @id @default(autoincrement())
+    firstName String
+    lastName  String
+    age       Int?
+}`} lang="prisma" title="db/schema/main.prisma" />
+
+## O/R Mapping
+
+Accella uses Accel Record, an ORM library designed with the Active Record pattern. It features a synchronous interface, so you don't need to use `await`, and implicit lazy loading of associations.
+
+<Code code={sampleCrudCode} lang="ts" />
+
+## Extending Model Classes
+
+By extending the class corresponding to a model, you can define validations, callbacks, custom methods, and more.
+
+```typescript
+// src/models/user.ts
+import { before } from "accel-record";
+import { validates } from "accel-record/validations";
+import { ApplicationRecord } from "./applicationRecord.js";
+
+export class UserModel extends ApplicationRecord {
+  // Define validations for the model
+  static validations = validates(this, [
+    ["firstName", { presence: true }],
+    ["lastName", { presence: true }],
+  ]);
+
+  @before("save")
+  myCallback() {
+    // this method is called before save
+  }
+
+  // Define a method to get the full name
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+```
+
+## Preparing Pages
+
+With file-based routing, no routing configuration is generally needed. Astro components allow you to write JavaScript logic and DOM structure in a single file, similar to React components or Vue SFCs, enabling type-safe template rendering.
+
+<Tabs>
+  <TabItem label="User List">
+  <Code code={sampleListCode} lang="astro" title="src/pages/users/index.astro" />
+  </TabItem>
+  <TabItem label="Edit User">
+  <Code code={sampleEditCode} lang="astro" title="src/pages/users/[id]/edit.astro" />
+  </TabItem>
+</Tabs>
+
+## Testing
+
+Vitest is set up to allow you to start testing immediately after starting the project. Additionally, factories for Accel Record are provided, making it easy to create test data.
+
+```typescript
+// tests/user.test.ts
+
+import { User } from "src/models";
+import { $User } from "./factories/user";
+
+test("create a user", () => {
+  const user = $User.create({
+    firstName: "John",
+    lastName: "Doe",
+  });
+
+  expect(user.fullName).toBe("John Doe");
+  expect(User.count()).toBe(1);
+});
+```
+
