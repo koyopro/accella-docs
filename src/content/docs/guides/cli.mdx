@@ -1,0 +1,27 @@
+---
+title: Running Scripts with the CLI
+---
+
+You can easily execute scripts from the CLI using the `npx accel run` command. This command operates with an initialized database connection and leverages Vite internally, allowing you to pass TypeScript files directly.
+
+If any of the following functions are defined in the script, they will be executed automatically:
+
+- A function exported as `export default`
+- A function exported as `main`
+
+### Script File and Execution Example
+
+```ts
+// src/scripts/sample.ts
+import { Account } from "./models/index.js";
+
+export default async () => {
+  const count = Account.count();
+  console.log(`Total accounts: ${count}`);
+};
+```
+
+```bash
+$ npx accel run src/scripts/sample.ts
+Total accounts: 10
+```

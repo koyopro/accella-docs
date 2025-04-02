@@ -1,0 +1,27 @@
+---
+title: CLIでスクリプトを実行する
+---
+
+`npx accel run` コマンドを使用すると、CLIからスクリプトを簡単に実行できます。このコマンドはデータベース接続を初期化した状態で動作し、内部で Vite を利用しているためTypeScript ファイルをそのまま渡すことが可能です。
+
+スクリプト内で以下のいずれかの関数が定義されている場合、自動的に実行されます：
+
+- `export default` でエクスポートされた関数
+- `main` としてエクスポートされた関数
+
+### スクリプトファイルと実行例
+
+```ts
+// src/scripts/sample.ts
+import { Account } from "./models/index.js";
+
+export default async () => {
+  const count = Account.count();
+  console.log(`Total accounts: ${count}`);
+};
+```
+
+```bash
+$ npx accel run src/scripts/sample.ts
+Total accounts: 10
+```

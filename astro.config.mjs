@@ -61,6 +61,7 @@ export default defineConfig({
             "guides/password-authentication",
             "guides/form-objects",
             "guides/frontend",
+            "guides/cli",
           ],
         },
         {
