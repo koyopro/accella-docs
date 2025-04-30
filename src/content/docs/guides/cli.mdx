@@ -25,3 +25,33 @@ export default async () => {
 $ npx accel run src/scripts/sample.ts
 Total accounts: 10
 ```
+
+### Custom CLI Commands
+
+In addition to running scripts, you can also register custom CLI commands in the files under `src/commands/`. This allows you to execute custom processes with the database connection fully initialized.
+
+#### Creating Custom Commands
+
+```ts
+// src/commands/hello.ts
+import { program } from "accella/cli";
+import { Account } from "../models";
+
+program
+  .command("hello")
+  .description("Hello command")
+  .action(() => {
+    console.log("Hello from Accella!");
+    const count = Account.count();
+    console.log(`Total accounts: ${count}`);
+  });
+```
+
+#### Running Custom Commands
+
+```bash
+# Run the command
+$ npx accel hello
+Hello from Accella!
+Total accounts: 5
+```
